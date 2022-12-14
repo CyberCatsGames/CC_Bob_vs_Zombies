@@ -3,7 +3,17 @@ guid: 1865220f5a59e4dc799b6bd25b0b853e
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_bb_fency
+    second: {fileID: 2100000, guid: 6af6f2a13eae64b6db3e4e2f63844c99, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: T_PolygonApocalypse_01_A
+    second: {fileID: 2800000, guid: 6cefd018dd48f40b28a49e405b98841f, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
