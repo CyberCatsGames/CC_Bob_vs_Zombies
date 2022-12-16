@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using TouchScript.Layers;
 using TouchScript.Utils;
 using UnityEngine;
 

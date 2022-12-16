@@ -14,6 +14,7 @@ namespace TouchScript.Examples
         private IEnumerator Start()
         {
             if (Delay != 0) yield return new WaitForSeconds(Delay);
+            print(gameObject.name);
             Destroy(gameObject);
         }
     }

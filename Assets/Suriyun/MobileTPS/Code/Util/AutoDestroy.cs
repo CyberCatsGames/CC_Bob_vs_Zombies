@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Suriyun.MobileTPS;
 
 public class AutoDestroy : MonoBehaviour
 {
+    public float time = 3f;
+    [SerializeField] private PoolObject _poolObject;
 
-	public float time = 3f;
-
-	void Start ()
-	{
-		Destroy (this.gameObject, time);
-	}
-	
-
+    private void Start()
+    {
+        if (_poolObject != null)
+            _poolObject.ReturnToPool();
+        else
+            Destroy(this.gameObject, time);
+    }
 }

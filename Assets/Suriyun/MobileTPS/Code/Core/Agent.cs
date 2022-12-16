@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-
 using System.Collections;
 using System;
-
 
 namespace Suriyun.MobileTPS
 {
     public class Agent : MonoBehaviour
     {
-
         public GameCamera game_camera;
-        public BehaviourControl behaviour;
 
-        [HideInInspector]
-        public Transform trans;
+        public BehaviourControl behaviour;
+        // [SerializeField] private Pool _effectsPool;
+
+        [HideInInspector] public Transform trans;
 
         public float hp = 15;
         public bool is_alive = true;
@@ -24,7 +22,7 @@ namespace Suriyun.MobileTPS
 
         public UnityEvent ActorDiedEvent;
 
-        void Awake()
+        private void Awake()
         {
             trans = transform;
             behaviour.Init(this);
@@ -33,6 +31,7 @@ namespace Suriyun.MobileTPS
         public void Hit(float damage)
         {
             hp -= damage;
+            // _effectsPool.GetFreeElement(trans.position, fx_on_hit.transform.rotation);
             Instantiate(fx_on_hit, trans.position, fx_on_hit.transform.rotation);
         }
     }
@@ -40,39 +39,25 @@ namespace Suriyun.MobileTPS
     [Serializable]
     public class BehaviourControl
     {
+        [HideInInspector] public Button btn_fire;
+        [HideInInspector] public Button btn_hide;
+        [HideInInspector] public Button btn_right;
+        [HideInInspector] public Button btn_left;
 
-        [HideInInspector]
-        public Button btn_fire;
-        [HideInInspector]
-        public Button btn_hide;
-        [HideInInspector]
-        public Button btn_right;
-        [HideInInspector]
-        public Button btn_left;
+        private Agent parent;
 
-        Agent parent;
+        [HideInInspector] public Transform destination;
+        [HideInInspector] public int destination_index;
+        [HideInInspector] public int current_index;
+        [HideInInspector] public bool firing;
+        // [HideInInspector] public float no_firing_delay;
+        [HideInInspector] public NavMeshAgent agent;
+        [HideInInspector] public Animator animator;
 
-        [HideInInspector]
-        public Transform destination;
-        [HideInInspector]
-        public int destination_index;
-        [HideInInspector]
-        public int current_index;
-        [HideInInspector]
-        public bool firing;
-        [HideInInspector]
-        public bool hiding;
-        [HideInInspector]
-        public float no_firing_delay;
-        [HideInInspector]
-        public NavMeshAgent agent;
-        [HideInInspector]
-        public Animator animator;
-
-        public Transform gun_tip;
-        public GameObject bullet_prefab;
-
-        Coroutine c_firing;
+        // [SerializeField] private Transform _chestParent;
+        // public Transform gun_tip;
+        // [SerializeField] private Pool _bulletPool;
+        [SerializeField] private PlayerShooter _shooter;
 
         public void Init(Agent parent)
         {
@@ -93,12 +78,12 @@ namespace Suriyun.MobileTPS
             parent.StartCoroutine(PseudoUpdate());
         }
 
-        IEnumerator Die()
+        private IEnumerator Die()
         {
             yield return new WaitForSecondsRealtime(2f);
         }
 
-        IEnumerator PseudoUpdate()
+        private IEnumerator PseudoUpdate()
         {
             while (true)
             {
@@ -108,6 +93,7 @@ namespace Suriyun.MobileTPS
                     parent.is_alive = false;
                     Game.instance.EventGameOver.Invoke();
                 }
+
                 yield return 0;
             }
         }
@@ -118,13 +104,8 @@ namespace Suriyun.MobileTPS
 
             if (parent.is_alive)
             {
-                hiding = false;
                 firing = true;
-                if (c_firing != null)
-                {
-                    parent.StopCoroutine(c_firing);
-                }
-                c_firing = parent.StartCoroutine(FiringMechanism());
+                _shooter.TryShoot();
             }
         }
 
@@ -134,24 +115,24 @@ namespace Suriyun.MobileTPS
             parent.game_camera.zoomed = false;
         }
 
-        IEnumerator FiringMechanism()
-        {
-            float gun_delay = 0.1f;
-            yield return new WaitForSeconds(0.16f);
-            while (firing)
-            {
-                UnityEngine.Object.Instantiate(bullet_prefab, gun_tip.position, gun_tip.rotation);
-                yield return new WaitForSeconds(gun_delay);
-            }
-        }
+        // private IEnumerator FiringMechanism()
+        // {
+        //     float gun_delay = 0.1f;
+        //     yield return new WaitForSeconds(0.16f);
+        //     while (firing)
+        //     {
+        //         var rotation = _chestParent.rotation;
+        //         _bulletPool.GetFreeElement(gun_tip.position, rotation);
+        //         yield return new WaitForSeconds(gun_delay);
+        //     }
+        // }
 
         public void Hide()
         {
             if (parent.is_alive)
             {
-                hiding = true;
                 firing = false;
-                no_firing_delay = 0.16f;
+                // no_firing_delay = 0.16f;
                 agent.Stop();
             }
         }
@@ -160,12 +141,12 @@ namespace Suriyun.MobileTPS
         {
             if (parent.is_alive)
             {
-                hiding = false;
                 agent.Resume();
                 if (current_index < destination_index)
                 {
                     current_index = destination_index;
                 }
+
                 destination_index = current_index - 1;
             }
         }
@@ -174,22 +155,22 @@ namespace Suriyun.MobileTPS
         {
             if (parent.is_alive)
             {
-                hiding = false;
                 agent.Resume();
                 if (current_index > destination_index)
                 {
                     current_index = destination_index;
                 }
+
                 destination_index = current_index + 1;
             }
         }
 
         public void Update()
         {
-
             UpdateCurrentPosition();
 
             #region :: Input Handler ::
+
             if (btn_left.pressed || Input.GetKey(KeyCode.A))
             {
                 GoLeft();
@@ -205,17 +186,18 @@ namespace Suriyun.MobileTPS
                 Hide();
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 StartFiring();
             }
+
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 StopFiring();
             }
+
             #endregion
 
-            animator.SetBool("hiding", hiding);
             animator.SetBool("firing", firing);
             animator.SetFloat("speed", agent.velocity.magnitude);
 
@@ -241,5 +223,4 @@ namespace Suriyun.MobileTPS
             }
         }
     }
-
 }

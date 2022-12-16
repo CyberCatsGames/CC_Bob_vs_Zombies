@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using TouchScript.Behaviors.Visualizer;
-
-namespace TouchScript.Examples.Cube 
+﻿namespace TouchScript.Examples.Cube 
 {
     public class CustomTouchProxy : TouchScript.Behaviors.Visualizer.TouchProxy 
     {
