@@ -7,12 +7,13 @@ namespace Suriyun.MobileTPS
     public class Pool : MonoBehaviour
     {
         [SerializeField] private PoolObject _prefab;
-        [Space(10)] [SerializeField] private Transform _container;
+        [Space(10)] [SerializeField] private string _poolName = "Pool";
         [SerializeField] private int _minCapacity;
         [SerializeField] private int _maxCapacity;
         [Space(10)] [SerializeField] private bool _autoExpand;
 
         private List<PoolObject> _pool;
+        private Transform _container;
 
         private void OnValidate()
         {
@@ -72,6 +73,7 @@ namespace Suriyun.MobileTPS
         private void CreatePool()
         {
             _pool = new List<PoolObject>(_minCapacity);
+            _container = new GameObject(_poolName).transform;
 
             for (int i = 0; i < _minCapacity; i++)
             {
@@ -91,14 +93,7 @@ namespace Suriyun.MobileTPS
         {
             foreach (var item in _pool)
             {
-                // if (item == null)
-                // {
-                //     _pool.Remove(item);
-                //     element = null;
-                //     return false;
-                // }
-
-                if (item.gameObject.activeInHierarchy == false)
+                if (item != null && item.gameObject.activeInHierarchy == false)
                 {
                     element = item;
                     element.gameObject.SetActive(isActive);

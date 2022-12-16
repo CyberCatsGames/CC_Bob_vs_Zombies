@@ -47,16 +47,12 @@ namespace Suriyun.MobileTPS
         private Agent parent;
 
         [HideInInspector] public Transform destination;
-        [HideInInspector] public int destination_index;
-        [HideInInspector] public int current_index;
+        public int destination_index;
+        public int current_index;
+        [SerializeField] private int _redPointsCount;
         [HideInInspector] public bool firing;
-        // [HideInInspector] public float no_firing_delay;
         [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public Animator animator;
-
-        // [SerializeField] private Transform _chestParent;
-        // public Transform gun_tip;
-        // [SerializeField] private Pool _bulletPool;
         [SerializeField] private PlayerShooter _shooter;
 
         public void Init(Agent parent)
@@ -115,24 +111,11 @@ namespace Suriyun.MobileTPS
             parent.game_camera.zoomed = false;
         }
 
-        // private IEnumerator FiringMechanism()
-        // {
-        //     float gun_delay = 0.1f;
-        //     yield return new WaitForSeconds(0.16f);
-        //     while (firing)
-        //     {
-        //         var rotation = _chestParent.rotation;
-        //         _bulletPool.GetFreeElement(gun_tip.position, rotation);
-        //         yield return new WaitForSeconds(gun_delay);
-        //     }
-        // }
-
         public void Hide()
         {
             if (parent.is_alive)
             {
                 firing = false;
-                // no_firing_delay = 0.16f;
                 agent.Stop();
             }
         }
@@ -171,17 +154,17 @@ namespace Suriyun.MobileTPS
 
             #region :: Input Handler ::
 
-            if (btn_left.pressed || Input.GetKey(KeyCode.A))
+            if (btn_left.pressed || Input.GetKeyDown(KeyCode.A))
             {
                 GoLeft();
             }
 
-            if (btn_right.pressed || Input.GetKey(KeyCode.D))
+            if (btn_right.pressed || Input.GetKeyDown(KeyCode.D))
             {
                 GoRight();
             }
 
-            if (btn_hide.pressed || Input.GetKey(KeyCode.S))
+            if (btn_hide.pressed || Input.GetKeyDown(KeyCode.S))
             {
                 Hide();
             }
@@ -201,7 +184,14 @@ namespace Suriyun.MobileTPS
             animator.SetBool("firing", firing);
             animator.SetFloat("speed", agent.velocity.magnitude);
 
-            destination_index = Mathf.Clamp(destination_index, 0, Game.instance.map_data.red_move_pos.Count - 1);
+            _redPointsCount = Game.instance.map_data.red_move_pos.Count;
+
+            if (destination_index < 0)
+            {
+                destination_index = _redPointsCount - 1;
+            }
+
+            destination_index %= _redPointsCount;
             destination.position = Game.instance.map_data.red_move_pos[destination_index].position;
             agent.destination = destination.position;
 

@@ -28,19 +28,20 @@ namespace Suriyun.MobileTPS
             StartCoroutine(Setup());
         }
 
-        // private void OnCollisionEnter(Collision collision)
-        // {
-        //     _rigidbody.useGravity = true;
-        //
-        //     if (collision.gameObject.TryGetComponent(out Enemy enemy))
-        //     {
-        //         print("Enemy");
-        //         enemy.hp -= _damage;
-        //         _hitEffect.transform.position = collision.contacts[0].point;
-        //         _hitEffect.Play();
-        //         Die();
-        //     }
-        // }
+        private void OnCollisionEnter(Collision collision)
+        {
+            _rigidbody.useGravity = true;
+        
+            if (collision.gameObject.TryGetComponent(out Enemy enemy))
+            {
+                print("Enemy");
+                enemy.hp -= _damage;
+                _hitEffect.transform.position = collision.contacts[0].point;
+                _hitEffect.Play();
+                CancelInvoke();
+                Die();
+            }
+        }
 
         private void Die()
         {
@@ -55,7 +56,7 @@ namespace Suriyun.MobileTPS
             yield return null;
             _rigidbody.velocity = Vector3.zero;
             _rigidbody.AddForce(transform.forward * _speed, ForceMode.VelocityChange);
-            Invoke(nameof(Die), _lifeTime);
+             Invoke(nameof(Die), _lifeTime);
         }
     }
 }
