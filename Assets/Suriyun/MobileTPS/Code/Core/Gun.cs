@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Suriyun.MobileTPS
 {
@@ -14,8 +13,7 @@ namespace Suriyun.MobileTPS
 
         public void Shoot()
         {
-            var element = _bulletPool.GetFreeElement(_shootPoint, false);
-            element.Activate();
+            _bulletPool.GetFreeElement(_shootPoint);
         }
 
         private void Update()

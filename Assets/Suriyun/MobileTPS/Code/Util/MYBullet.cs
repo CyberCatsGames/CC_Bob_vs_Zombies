@@ -25,45 +25,37 @@ namespace Suriyun.MobileTPS
 
         private void OnEnable()
         {
-            _rigidbody.velocity = Vector3.zero;
-            _rigidbody.AddForce(transform.forward * _speed, ForceMode.VelocityChange);
-            _dieCoroutine = StartCoroutine(nameof(DieInTime));
+            StartCoroutine(Setup());
         }
 
-        private void OnDisable()
-        {
-            if (_dieCoroutine != null)
-                StopCoroutine(_dieCoroutine);
-
-            _dieCoroutine = null;
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            _rigidbody.useGravity = true;
-
-            if (collision.gameObject.TryGetComponent(out Enemy enemy))
-            {
-                print("Enemy");
-                enemy.hp -= _damage;
-                _hitEffect.transform.position = collision.contacts[0].point;
-                _hitEffect.Play();
-                Die();
-            }
-        }
-
-        private IEnumerator DieInTime()
-        {
-            yield return new WaitForSeconds(_lifeTime);
-            Die();
-            _dieCoroutine = null;
-        }
+        // private void OnCollisionEnter(Collision collision)
+        // {
+        //     _rigidbody.useGravity = true;
+        //
+        //     if (collision.gameObject.TryGetComponent(out Enemy enemy))
+        //     {
+        //         print("Enemy");
+        //         enemy.hp -= _damage;
+        //         _hitEffect.transform.position = collision.contacts[0].point;
+        //         _hitEffect.Play();
+        //         Die();
+        //     }
+        // }
 
         private void Die()
         {
             _rigidbody.velocity = Vector3.zero;
             transform.rotation = Quaternion.identity;
             _poolObject.ReturnToPool();
+        }
+
+        private IEnumerator Setup()
+        {
+            yield return null;
+            yield return null;
+            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.AddForce(transform.forward * _speed, ForceMode.VelocityChange);
+            Invoke(nameof(Die), _lifeTime);
         }
     }
 }
