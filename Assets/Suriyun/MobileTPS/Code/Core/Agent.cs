@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using System.Collections;
 using System;
+using Object = UnityEngine.Object;
 
 namespace Suriyun.MobileTPS
 {
@@ -47,9 +48,11 @@ namespace Suriyun.MobileTPS
         private Agent parent;
 
         [HideInInspector] public Transform destination;
-        public int destination_index;
-        public int current_index;
-        [SerializeField] private int _redPointsCount;
+        private int destination_index;
+        private int current_index;
+        private AimTag _aim;
+        private int _redPointsCount;
+
         [HideInInspector] public bool firing;
         [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public Animator animator;
@@ -61,6 +64,8 @@ namespace Suriyun.MobileTPS
             destination = GameObject.Find("+destination").transform;
             animator = parent.GetComponent<Animator>();
             agent = parent.GetComponent<NavMeshAgent>();
+            _aim = Object.FindObjectOfType<AimTag>();
+            _aim.gameObject.SetActive(false);
 
             if (btn_fire == null)
                 btn_fire = GameObject.Find("+button.fire").GetComponent<Button>();
@@ -200,6 +205,8 @@ namespace Suriyun.MobileTPS
             {
                 parent.StopAllCoroutines();
             }
+
+            _aim.gameObject.SetActive(_shooter.ShowAim);
         }
 
         private void UpdateCurrentPosition()

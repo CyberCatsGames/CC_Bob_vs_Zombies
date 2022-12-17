@@ -7,19 +7,23 @@ namespace Suriyun.MobileTPS
     [RequireComponent(typeof(PoolObject))]
     public class MYBullet : MonoBehaviour
     {
-        [SerializeField] private ParticleSystem _hitEffect;
-        [SerializeField] private float _damage = 1f;
-
-        [SerializeField] private float _speed = 120f;
+        [SerializeField] protected ParticleSystem HitEffect;
         [SerializeField] private float _lifeTime = 1.5f;
 
-        private Rigidbody _rigidbody;
         private PoolObject _poolObject;
         private Coroutine _dieCoroutine;
 
+        protected Rigidbody Rigidbody;
+
+        protected float LifeTime => _lifeTime;
+
+        protected float Speed { get; private set; } = 120f;
+
+        protected float Damage { get; private set; } = 6f;
+
         private void Awake()
         {
-            _rigidbody = GetComponent<Rigidbody>();
+            Rigidbody = GetComponent<Rigidbody>();
             _poolObject = GetComponent<PoolObject>();
         }
 
@@ -28,35 +32,45 @@ namespace Suriyun.MobileTPS
             StartCoroutine(Setup());
         }
 
-        private void OnCollisionEnter(Collision collision)
+        protected virtual void OnCollisionEnter(Collision collision)
         {
-            _rigidbody.useGravity = true;
-        
+            Rigidbody.useGravity = true;
+
             if (collision.gameObject.TryGetComponent(out Enemy enemy))
             {
-                print("Enemy");
-                enemy.hp -= _damage;
-                _hitEffect.transform.position = collision.contacts[0].point;
-                _hitEffect.Play();
-                CancelInvoke();
+                enemy.Health -= Damage;
+                HitEffect.transform.position = collision.contacts[0].point;
+                HitEffect.Play();
+                CancelInvoke(nameof(Die));
                 Die();
             }
         }
 
-        private void Die()
+        protected virtual void Die()
         {
-            _rigidbody.velocity = Vector3.zero;
+            Rigidbody.velocity = Vector3.zero;
             transform.rotation = Quaternion.identity;
             _poolObject.ReturnToPool();
         }
 
-        private IEnumerator Setup()
+        protected virtual IEnumerator Setup()
         {
             yield return null;
             yield return null;
-            _rigidbody.velocity = Vector3.zero;
-            _rigidbody.AddForce(transform.forward * _speed, ForceMode.VelocityChange);
-             Invoke(nameof(Die), _lifeTime);
+            Rigidbody.useGravity = false;
+            Rigidbody.velocity = Vector3.zero;
+            Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);
+            Invoke(nameof(Die), _lifeTime);
+        }
+
+        public void SetSpeed(float value)
+        {
+            Speed = value;
+        }
+
+        public void SetDamage(float damage)
+        {
+            Damage = damage;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Suriyun.MobileTPS
         public float atk_dmg = 6;
         public float dmg_delay = 0.33f;
 
-        public float hp = 100f;
+        public float Health = 100f;
         private bool is_dead;
 
         private void Start()
@@ -37,9 +37,9 @@ namespace Suriyun.MobileTPS
 
         private void Update()
         {
-            animator.SetFloat("hp", hp);
+            animator.SetFloat("hp", Health);
             animator.SetFloat("speed", agent.velocity.magnitude);
-            if (hp <= 0f && !is_dead)
+            if (Health <= 0f && !is_dead)
             {
                 is_dead = true;
                 StopAllCoroutines();
@@ -61,7 +61,7 @@ namespace Suriyun.MobileTPS
         {
             while (true)
             {
-                agents = GameObject.FindObjectsOfType<Agent>();
+                agents = FindObjectsOfType<Agent>();
                 int nearest = 0;
                 float min = 100;
                 for (int i = 0; i < agents.Length; i++)
