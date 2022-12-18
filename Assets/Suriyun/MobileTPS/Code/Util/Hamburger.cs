@@ -49,7 +49,7 @@ namespace Suriyun.MobileTPS
                         continue;
 
                     var enemy = _results[j].GetComponent<Enemy>();
-                    enemy.Health -= Damage;
+                    enemy.ApplyDamage(Damage);
                 }
 
                 yield return repeatRate;
@@ -65,6 +65,7 @@ namespace Suriyun.MobileTPS
             yield return null;
             yield return null;
             Rigidbody.useGravity = true;
+            Rigidbody.angularVelocity = Vector3.zero;
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);
             Invoke(nameof(Die), LifeTime);

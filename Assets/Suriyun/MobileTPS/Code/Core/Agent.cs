@@ -107,6 +107,7 @@ namespace Suriyun.MobileTPS
             {
                 firing = true;
                 _shooter.TryShoot();
+
             }
         }
 
@@ -206,6 +207,11 @@ namespace Suriyun.MobileTPS
                 parent.StopAllCoroutines();
             }
 
+            if (_shooter.Trajectory != null)
+            {
+                _shooter.Trajectory.gameObject.SetActive(firing);
+            }
+            
             _aim.gameObject.SetActive(_shooter.ShowAim);
         }
 

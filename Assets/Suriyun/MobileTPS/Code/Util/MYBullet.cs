@@ -38,7 +38,7 @@ namespace Suriyun.MobileTPS
 
             if (collision.gameObject.TryGetComponent(out Enemy enemy))
             {
-                enemy.Health -= Damage;
+                enemy.ApplyDamage(Damage);
                 HitEffect.transform.position = collision.contacts[0].point;
                 HitEffect.Play();
                 CancelInvoke(nameof(Die));
@@ -49,6 +49,7 @@ namespace Suriyun.MobileTPS
         protected virtual void Die()
         {
             Rigidbody.velocity = Vector3.zero;
+            Rigidbody.angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.identity;
             _poolObject.ReturnToPool();
         }
@@ -58,6 +59,7 @@ namespace Suriyun.MobileTPS
             yield return null;
             yield return null;
             Rigidbody.useGravity = false;
+            Rigidbody.angularVelocity = Vector3.zero;
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);
             Invoke(nameof(Die), _lifeTime);

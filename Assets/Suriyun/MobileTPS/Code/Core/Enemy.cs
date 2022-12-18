@@ -6,13 +6,14 @@ namespace Suriyun.MobileTPS
 {
     public class Enemy : MonoBehaviour
     {
+        [SerializeField] private Rigidbody _rigidbody;
+        [SerializeField] private float _health = 100f;
         [HideInInspector] public Agent[] agents;
-        [HideInInspector] public Animator animator;
-        [HideInInspector] private string state;
+        [HideInInspector] public Animator _animator;
+        private string _state;
 
-        private NavMeshAgent agent;
+        private NavMeshAgent _agent;
         private Agent target;
-        private Transform trans;
 
         public float target_switching_delay = 1.66f;
 
@@ -21,27 +22,35 @@ namespace Suriyun.MobileTPS
         public float atk_dmg = 6;
         public float dmg_delay = 0.33f;
 
-        public float Health = 100f;
-        private bool is_dead;
+        private bool _isDead;
+        private Coroutine _stopVelocityCoroutine;
 
         private void Start()
         {
-            agent = GetComponent<NavMeshAgent>();
-            animator = GetComponent<Animator>();
-            trans = transform;
+            _agent = GetComponent<NavMeshAgent>();
+            _animator = GetComponent<Animator>();
             StartCoroutine(FindTarget());
-            state = "Move";
+            _state = "Move";
             StartCoroutine(Move());
+            _animator.SetFloat("hp", _health);
         }
-
 
         private void Update()
         {
-            animator.SetFloat("hp", Health);
-            animator.SetFloat("speed", agent.velocity.magnitude);
-            if (Health <= 0f && !is_dead)
+            _animator.SetFloat("speed", _agent.velocity.magnitude);
+        }
+
+        public void ApplyDamage(float value)
+        {
+            if (_isDead == true)
+                return;
+
+            _health -= value;
+            _animator.SetFloat("hp", _health);
+
+            if (_health <= 0f)
             {
-                is_dead = true;
+                _isDead = true;
                 StopAllCoroutines();
                 StartCoroutine(Die());
             }
@@ -49,12 +58,25 @@ namespace Suriyun.MobileTPS
 
         private IEnumerator Die()
         {
-            //Debug.Log ("Dead : " + gameObject.name);
-            agent.Stop();
-            Collider col = GetComponent<Collider>();
-            col.enabled = false;
+            _agent.isStopped = true;
+            GetComponent<Collider>().enabled = false;
+            _animator.SetBool("IsDied", true);
             yield return new WaitForSecondsRealtime(3f);
-            Destroy(this.gameObject);
+            Destroy(gameObject);
+        }
+
+        private IEnumerator StopVelocityInTime()
+        {
+            yield return new WaitForSeconds(1f);
+            _rigidbody.velocity = Vector3.zero;
+        }
+
+        public void StopVelocity()
+        {
+            if (_stopVelocityCoroutine != null)
+                return;
+
+            _stopVelocityCoroutine = StartCoroutine(StopVelocityInTime());
         }
 
         private IEnumerator FindTarget()
@@ -66,7 +88,7 @@ namespace Suriyun.MobileTPS
                 float min = 100;
                 for (int i = 0; i < agents.Length; i++)
                 {
-                    float distance = Vector3.Distance(trans.position, agents[i].trans.position);
+                    float distance = Vector3.Distance(transform.position, agents[i].trans.position);
                     if (distance < min)
                     {
                         nearest = i;
@@ -82,30 +104,30 @@ namespace Suriyun.MobileTPS
 
         private IEnumerator Move()
         {
-            while (state == "Move")
+            while (_state == "Move")
             {
-                agent.destination = target.trans.position;
-                float distance_to_target = Vector3.Distance(trans.position, target.trans.position);
+                _agent.destination = target.trans.position;
+                float distance_to_target = Vector3.Distance(transform.position, target.trans.position);
                 if (distance_to_target < atk_range)
                 {
-                    state = "Atk";
+                    _state = "Atk";
                 }
 
                 yield return 0;
             }
 
-            StartCoroutine(state);
+            StartCoroutine(_state);
         }
 
         private IEnumerator Atk()
         {
             //Debug.Log ("Atk");
-            animator.SetTrigger("atk");
+            _animator.SetTrigger("atk");
             yield return new WaitForSeconds(dmg_delay);
             target.Hit(atk_dmg);
             yield return new WaitForSeconds(atk_delay);
-            state = "Move";
-            StartCoroutine(state);
+            _state = "Move";
+            StartCoroutine(_state);
         }
     }
 }

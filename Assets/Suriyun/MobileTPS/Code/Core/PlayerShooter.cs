@@ -10,6 +10,8 @@ namespace Suriyun.MobileTPS
 
         public bool ShowAim => _gun.ShowAim;
 
+        public TrajectoryRenderer Trajectory => _gun.Trajectory != null ? _gun.Trajectory : null;
+
         public void TryShoot()
         {
             if (_gun.Cooldown.IsReady == true)
