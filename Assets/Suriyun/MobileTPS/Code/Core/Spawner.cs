@@ -58,7 +58,6 @@ namespace Suriyun.MobileTPS
         {
             enemy.Died -= OnEnemyDied;
             _killCount++;
-            print($"Score {_killCount} : {WaveEnemyCount}");
 
             if (WaveEnemyCount == _killCount)
             {
