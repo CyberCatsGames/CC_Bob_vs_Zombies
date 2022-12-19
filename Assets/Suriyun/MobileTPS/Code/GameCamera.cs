@@ -5,8 +5,9 @@ namespace Suriyun.MobileTPS
 {
     public class GameCamera : MonoBehaviour
     {
-        [HideInInspector]
-        public GameObject player;
+        [SerializeField] private float _leftBound = 120;
+        [SerializeField] private float _rightBound = 260;
+        [HideInInspector] public GameObject player;
         public Transform cam_holder;
         public Transform target;
         public Vector3 offset_pos;
@@ -33,9 +34,8 @@ namespace Suriyun.MobileTPS
             target_rotation = trans.rotation.eulerAngles;
             aimer.rotation = trans.rotation;
             cam = GetComponent<Camera>();
-            player = GameObject.FindObjectOfType<Agent>().gameObject;
+            player = FindObjectOfType<Agent>().gameObject;
         }
-
 
         private void Update()
         {
@@ -44,14 +44,16 @@ namespace Suriyun.MobileTPS
             {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov_zoom, zoom_speed * Time.deltaTime);
             }
-            else {
+            else
+            {
                 cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov_normal, zoom_speed * Time.deltaTime);
             }
 
             // Aim position //
             aimer.position = trans.position;
 
-            Vector3 pos = player.transform.position + aimer.forward * offset_pos.z + aimer.up * offset_pos.y + aimer.right * offset_pos.x;
+            Vector3 pos = player.transform.position + aimer.forward * offset_pos.z + aimer.up * offset_pos.y +
+                          aimer.right * offset_pos.x;
             pos.y = Mathf.Clamp(pos.y, player.transform.position.y, pos.y + 1);
             trans.position = Vector3.Slerp(
                 trans.position,
@@ -63,32 +65,20 @@ namespace Suriyun.MobileTPS
             {
                 target.transform.position = hit.point;
             }
-            else {
+            else
+            {
                 target.transform.position = trans.position + trans.forward * 20;
             }
 
             // Rotation control //
 
+            Vector3 eulerAngles = aimer.rotation.eulerAngles;
+            print(eulerAngles.y);
+            eulerAngles.y = Mathf.Clamp(eulerAngles.y, _leftBound, _rightBound);
+            aimer.rotation = Quaternion.Euler(eulerAngles);
 
-
-
-            /*
-            Vector3 rotation = aimer.localEulerAngles;
-            Debug.Log(rotation);
-            if(rotation.x>180 && rotation.x < 360)
-            {
-                rotation.x = Mathf.Clamp(rotation.x, 270, 360);
-            }
-            if (rotation.x > 0 && rotation.x < 90)
-            {
-                rotation.x = Mathf.Clamp(rotation.x, 0, 90);
-            }
-            // rotation.x = Mathf.Clamp(rotation.x, -90, 90);
-            aimer.localEulerAngles = rotation;*/
-
-            // aimer.rotation = Quaternion.Slerp(aimer.rotation, Quaternion.Euler(Vector3.forward), 90);
-
-            trans.rotation = Quaternion.Slerp(trans.rotation, aimer.rotation, screen_rotation_smoothness * Time.deltaTime);
+            trans.rotation =
+                Quaternion.Slerp(trans.rotation, aimer.rotation, screen_rotation_smoothness * Time.deltaTime);
         }
 
         private void OnEnable()
@@ -114,13 +104,13 @@ namespace Suriyun.MobileTPS
             }
 
             Quaternion tmp = aimer.rotation;
-            aimer.Rotate( rotate_vertical, Space.World);
+            aimer.Rotate(rotate_vertical, Space.World);
             if (aimer.up.y < 0)
             {
                 aimer.rotation = tmp;
             }
-            aimer.Rotate(rotate_horizontal, Space.World);
 
+            aimer.Rotate(rotate_horizontal, Space.World);
         }
     }
 }
