@@ -240,6 +240,7 @@ namespace Suriyun.MobileTPS
                 {
                     _callback?.Invoke();
                     _callback = null;
+                    _isNextWave = false;
                 }
             }
         }
