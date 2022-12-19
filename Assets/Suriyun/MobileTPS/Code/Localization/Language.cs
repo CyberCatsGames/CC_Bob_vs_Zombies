@@ -16,7 +16,9 @@ namespace Suriyun.MobileTPS
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                CurrentLanguage = GetLanguage();
+
+                //CurrentLanguage = GetLanguage();
+                LocalizationManager.Instance.SetLocale(GetLanguage());
             }
             else
             {
