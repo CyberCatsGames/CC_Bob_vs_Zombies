@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Suriyun.MobileTPS
 {
@@ -24,6 +26,8 @@ namespace Suriyun.MobileTPS
 
         private bool _isDead;
         private Coroutine _stopVelocityCoroutine;
+
+        public event Action<Enemy> Died;
 
         private void Start()
         {
@@ -53,6 +57,7 @@ namespace Suriyun.MobileTPS
                 _isDead = true;
                 StopAllCoroutines();
                 StartCoroutine(Die());
+                Died?.Invoke(this);
             }
         }
 

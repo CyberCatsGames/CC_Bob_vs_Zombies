@@ -25,9 +25,9 @@ namespace Suriyun.MobileTPS
         public float zoom_speed = 6f;
         public float fov_zoom = 30;
         public float fov_normal = 60;
-        Camera cam;
+        private Camera cam;
 
-        void Start()
+        private void Start()
         {
             trans = transform;
             target_rotation = trans.rotation.eulerAngles;
@@ -37,7 +37,7 @@ namespace Suriyun.MobileTPS
         }
 
 
-        void Update()
+        private void Update()
         {
             // Zoom control //
             if (zoomed)

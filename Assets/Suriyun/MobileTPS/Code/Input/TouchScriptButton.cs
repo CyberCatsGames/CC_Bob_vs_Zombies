@@ -7,8 +7,8 @@ namespace Suriyun.MobileTPS
 	{
         protected Material m;
 
-        PressGesture press;
-		ReleaseGesture release;
+        private PressGesture press;
+        private ReleaseGesture release;
 
 		protected virtual void Awake ()
 		{
@@ -17,13 +17,13 @@ namespace Suriyun.MobileTPS
 			release = GetComponent<ReleaseGesture> ();
 		}
 
-		void OnEnable ()
+		private void OnEnable ()
 		{
 			press.Pressed += Press_Pressed;
 			release.Released += Release_Released;
 		}
 
-		void OnDisable ()
+		private void OnDisable ()
 		{
 			press.Pressed -= Press_Pressed;
 			release.Released -= Release_Released;

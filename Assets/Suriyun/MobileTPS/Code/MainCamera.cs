@@ -6,14 +6,14 @@ namespace Suriyun.MobileTPS
 	{
 	
 		public Transform cam_holder;
-		Transform trans;
+		private Transform trans;
 
-		void Start ()
+		private void Start ()
 		{
 			trans = transform;
 		}
 
-		void Update ()
+		private void Update ()
 		{
 			// Smmoth out camera transition //
 			trans.position = Vector3.Lerp (trans.position, cam_holder.position, 60f * Time.deltaTime);

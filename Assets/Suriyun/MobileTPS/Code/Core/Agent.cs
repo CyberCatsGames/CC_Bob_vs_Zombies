@@ -35,6 +35,11 @@ namespace Suriyun.MobileTPS
             // _effectsPool.GetFreeElement(trans.position, fx_on_hit.transform.rotation);
             Instantiate(fx_on_hit, trans.position, fx_on_hit.transform.rotation);
         }
+
+        public void GoToNextWave()
+        {
+            behaviour.GoToNextWave();
+        }
     }
 
     [Serializable]
@@ -107,7 +112,6 @@ namespace Suriyun.MobileTPS
             {
                 firing = true;
                 _shooter.TryShoot();
-
             }
         }
 
@@ -158,48 +162,56 @@ namespace Suriyun.MobileTPS
         {
             UpdateCurrentPosition();
 
-            #region :: Input Handler ::
-
-            if (btn_left.pressed || Input.GetKeyDown(KeyCode.A))
+            if (Game.instance.BlockInput == false)
             {
-                GoLeft();
-            }
+                #region :: Input Handler ::
 
-            if (btn_right.pressed || Input.GetKeyDown(KeyCode.D))
+                if (btn_left.pressed || Input.GetKeyDown(KeyCode.A))
+                {
+                    GoLeft();
+                }
+
+                if (btn_right.pressed || Input.GetKeyDown(KeyCode.D))
+                {
+                    GoRight();
+                }
+
+                if (btn_hide.pressed || Input.GetKeyDown(KeyCode.S))
+                {
+                    Hide();
+                }
+
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    StartFiring();
+                }
+
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    StopFiring();
+                }
+
+                #endregion
+            }
+            else
             {
-                GoRight();
-            }
+                _redPointsCount = Game.instance.ShootZone.MovePoints.Count;
+                destination_index = Mathf.Clamp(destination_index, 0, _redPointsCount - 1);
+                destination.position = Game.instance.ShootZone.MovePoints[destination_index].position;
 
-            if (btn_hide.pressed || Input.GetKeyDown(KeyCode.S))
-            {
-                Hide();
-            }
+                var position = agent.transform.position;
 
-            if (Input.GetKey(KeyCode.Space))
-            {
-                StartFiring();
+                Vector3 xzPosition = new Vector3(position.x, destination.position.y, position.z);
+                if (destination.position == xzPosition)
+                {
+                    Game.instance.BlockInput = false;
+                }
             }
-
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                StopFiring();
-            }
-
-            #endregion
 
             animator.SetBool("firing", firing);
             animator.SetFloat("speed", agent.velocity.magnitude);
 
-            _redPointsCount = Game.instance.map_data.red_move_pos.Count;
-
-            if (destination_index < 0)
-            {
-                destination_index = _redPointsCount - 1;
-            }
-
-            destination_index %= _redPointsCount;
-            destination.position = Game.instance.map_data.red_move_pos[destination_index].position;
-            agent.destination = destination.position;
+            Move();
 
             animator.SetFloat("hp", parent.hp);
             if (!parent.is_alive)
@@ -211,15 +223,30 @@ namespace Suriyun.MobileTPS
             {
                 _shooter.Trajectory.gameObject.SetActive(firing);
             }
-            
+
             _aim.gameObject.SetActive(_shooter.ShowAim);
+        }
+
+        private void Move()
+        {
+            _redPointsCount = Game.instance.ShootZone.MovePoints.Count;
+            destination_index = Mathf.Clamp(destination_index, 0, _redPointsCount - 1);
+            destination.position = Game.instance.ShootZone.MovePoints[destination_index].position;
+            agent.destination = destination.position;
+        }
+
+        public void GoToNextWave()
+        {
+            Game.instance.BlockInput = true;
+            destination_index = 0;
+            Move();
         }
 
         private void UpdateCurrentPosition()
         {
-            for (int i = 0; i < Game.instance.map_data.red_move_pos.Count; i++)
+            for (int i = 0; i < Game.instance.ShootZone.MovePoints.Count; i++)
             {
-                if (Vector3.Distance(parent.trans.position, Game.instance.map_data.red_move_pos[i].position) < 1f)
+                if (Vector3.Distance(parent.trans.position, Game.instance.ShootZone.MovePoints[i].position) < 1f)
                 {
                     current_index = i;
                 }

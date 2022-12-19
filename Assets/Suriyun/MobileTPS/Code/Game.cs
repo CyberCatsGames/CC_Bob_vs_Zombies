@@ -1,48 +1,62 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 
 namespace Suriyun.MobileTPS
 {
+    [Serializable]
+    public class MapData
+    {
+        public List<AttackPoints> ShootZones;
+    }
+
     public class Game : MonoBehaviour
     {
+        [SerializeField] private Spawner _spawner;
+        [SerializeField] private Agent _agent;
+        [SerializeField] private MapData _mapData;
+        [SerializeField] private RectTransform _nextWavePanel;
+        [SerializeField] private UnityEngine.UI.Button _nextWaveButton;
+
+        private int _currentShootZoneIndex;
 
         public static Game instance;
+        public bool BlockInput;
 
-        public GameObject enemy_prefab;
-        public MapData map_data;
+        public Spawner Spawner => _spawner;
+
+        public AttackPoints ShootZone => _mapData.ShootZones[_currentShootZoneIndex];
+
+        private const int TARGET_FRAME_RATE = 60;
 
         public UnityEvent EventGameStart;
         public UnityEvent EventGameRestart;
         public UnityEvent EventGameOver;
 
-        void Awake()
+        private void Awake()
         {
             instance = this;
-            // Perform game setttings here //
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = TARGET_FRAME_RATE;
         }
 
-        IEnumerator Spawner()
+        private void OnEnable()
         {
-            while (true)
-            {
-                int rand = UnityEngine.Random.Range(0, map_data.enemy_spawn_point.Count - 1);
-                GameObject g = (GameObject)Instantiate(enemy_prefab);
-                g.transform.parent = null;
-                g.transform.position = map_data.enemy_spawn_point[rand].position;
-                yield return new WaitForSecondsRealtime(1f);
-            }
+            _spawner.WaveFinished += OnWaveFinished;
+            _nextWaveButton.onClick.AddListener(OnNextWave);
         }
 
+        private void OnDisable()
+        {
+            _spawner.WaveFinished -= OnWaveFinished;
+            _nextWaveButton.onClick.RemoveListener(OnNextWave);
+        }
 
         public void GameStart()
         {
             EventGameStart.Invoke();
-            StartCoroutine(Spawner());
+            Spawner.StartSpawning();
         }
 
         public void GameRestart()
@@ -53,19 +67,32 @@ namespace Suriyun.MobileTPS
         public void ShowGameOverMenu()
         {
             EventGameOver.Invoke();
-            Debug.Log("Game Over");
-            StopCoroutine(Spawner());
+            Spawner.StopSpawning();
         }
 
+        private void OnWaveFinished()
+        {
+            _nextWavePanel.gameObject.SetActive(true);
+        }
+
+        private void OnNextWave()
+        {
+            _currentShootZoneIndex++;
+
+            _currentShootZoneIndex = Mathf.Clamp(
+                _currentShootZoneIndex,
+                0,
+                _mapData.ShootZones.Count - 1);
+            
+            _nextWavePanel.gameObject.SetActive(false);
+            _agent.GoToNextWave();
+            _spawner.StartSpawning();
+        }
     }
 
     [Serializable]
-    public class MapData
+    public class AttackPoints
     {
-        // Destinations data for actor navigation
-        // Player is in Red team so it will only move along red_move_pos
-        public List<Transform> red_move_pos;
-        public List<Transform> blue_move_pos;
-        public List<Transform> enemy_spawn_point;
+        public List<Transform> MovePoints;
     }
 }

@@ -4,7 +4,7 @@ namespace Suriyun.MobileTPS
 {
 	public class SentEvent : StateMachineBehaviour
 	{
-		static Agent agent;
+		private static Agent agent;
 
 		override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
 		{

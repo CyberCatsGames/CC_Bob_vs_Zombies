@@ -8,18 +8,18 @@ public class FPSUpdater : MonoBehaviour
     public Text text;
     public int fps;
 
-    void Start()
+    private void Start()
     {
         text = GetComponent<Text>();
         StartCoroutine(UpdateFPS());
     }
 
-    void Update()
+    private void Update()
     {
         fps = (int)(1f / Time.deltaTime);
     }
 
-    IEnumerator UpdateFPS()
+    private IEnumerator UpdateFPS()
     {
         while (true)
         {
