@@ -12,8 +12,14 @@ namespace Suriyun.MobileTPS
         [SerializeField] private TrajectoryRenderer _trajectory;
         [SerializeField] private bool _showAim;
 
+        protected Transform ShootPoint => _shootPoint;
+
+        protected float Damage => _damage;
+
         public bool ShowAim => _showAim;
-        
+
+        public TrajectoryRenderer Trajectory => _trajectory;
+
         public Cooldown Cooldown => _cooldown;
 
         private void Start()
@@ -21,14 +27,20 @@ namespace Suriyun.MobileTPS
             _bulletPool.Init(_speed, _damage);
         }
 
-        public void Shoot()
+        public virtual void Shoot()
         {
             _bulletPool.GetFreeElement(_shootPoint);
         }
 
         private void Update()
         {
-            _trajectory.ShowTrajectory(_shootPoint.position, _speed * _shootPoint.forward);
+            UpdateTrajectory();
+        }
+
+        protected virtual void UpdateTrajectory()
+        {
+            if (_trajectory != null)
+                _trajectory.ShowTrajectory(_shootPoint.position, _speed * _shootPoint.forward);
         }
     }
 }
