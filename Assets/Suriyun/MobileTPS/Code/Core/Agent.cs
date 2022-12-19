@@ -36,9 +36,9 @@ namespace Suriyun.MobileTPS
             Instantiate(fx_on_hit, trans.position, fx_on_hit.transform.rotation);
         }
 
-        public void GoToNextWave()
+        public void GoToNextWave(Action callback = null)
         {
-            behaviour.GoToNextWave();
+            behaviour.GoToNextWave(callback);
         }
     }
 
@@ -62,6 +62,8 @@ namespace Suriyun.MobileTPS
         [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public Animator animator;
         [SerializeField] private PlayerShooter _shooter;
+        private bool _isNextWave;
+        private Action _callback;
 
         public void Init(Agent parent)
         {
@@ -225,9 +227,25 @@ namespace Suriyun.MobileTPS
             }
 
             _aim.gameObject.SetActive(_shooter.ShowAim);
+
+            if (_isNextWave == true)
+            {
+                Vector3 xzPosition = new Vector3(agent.transform.position.x, 0f, agent.transform.position.z);
+                Vector3 xzDestinationPosition = new Vector3(destination.position.x, 0f, destination.position.z);
+
+                Debug.Log(xzPosition);
+                Debug.Log(xzDestinationPosition);
+
+                if (xzPosition == xzDestinationPosition)
+                {
+                    _callback?.Invoke();
+                    _callback = null;
+                    _isNextWave = false;
+                }
+            }
         }
 
-        private void Move()
+        private void Move(Action callback = null)
         {
             _redPointsCount = Game.instance.ShootZone.MovePoints.Count;
             destination_index = Mathf.Clamp(destination_index, 0, _redPointsCount - 1);
@@ -235,11 +253,13 @@ namespace Suriyun.MobileTPS
             agent.destination = destination.position;
         }
 
-        public void GoToNextWave()
+        public void GoToNextWave(Action callback = null)
         {
             Game.instance.BlockInput = true;
             destination_index = 0;
-            Move();
+            Move(callback);
+            _isNextWave = true;
+            _callback = callback;
         }
 
         private void UpdateCurrentPosition()

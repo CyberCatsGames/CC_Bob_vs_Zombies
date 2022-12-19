@@ -23,6 +23,8 @@ namespace Suriyun.MobileTPS
             if (_spawnCoroutine != null)
                 return;
 
+            print("StartSPawning");
+
             _spawnCoroutine = StartCoroutine(Spawn());
         }
 
