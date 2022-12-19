@@ -83,10 +83,9 @@ namespace Suriyun.MobileTPS
                 _currentShootZoneIndex,
                 0,
                 _mapData.ShootZones.Count - 1);
-            
+
             _nextWavePanel.gameObject.SetActive(false);
-            _agent.GoToNextWave();
-            _spawner.StartSpawning();
+            _agent.GoToNextWave(() => _spawner.StartSpawning());
         }
     }
 
