@@ -8,13 +8,10 @@ namespace Suriyun.MobileTPS
         [SerializeField] private float _leftBound = 120;
         [SerializeField] private float _rightBound = 260;
         [HideInInspector] public GameObject player;
-        public Transform cam_holder;
         public Transform target;
         public Vector3 offset_pos;
-        public Vector3 offset_rot;
         public float smoothness = 1.66f;
         private Transform trans;
-        public Vector3 target_rotation;
 
         public Transform aimer;
         public ScreenTransformGesture screen_gesture;
@@ -31,7 +28,6 @@ namespace Suriyun.MobileTPS
         private void Start()
         {
             trans = transform;
-            target_rotation = trans.rotation.eulerAngles;
             aimer.rotation = trans.rotation;
             cam = GetComponent<Camera>();
             player = FindObjectOfType<Agent>().gameObject;
@@ -73,7 +69,6 @@ namespace Suriyun.MobileTPS
             // Rotation control //
 
             Vector3 eulerAngles = aimer.rotation.eulerAngles;
-            print(eulerAngles.y);
             eulerAngles.y = Mathf.Clamp(eulerAngles.y, _leftBound, _rightBound);
             aimer.rotation = Quaternion.Euler(eulerAngles);
 
