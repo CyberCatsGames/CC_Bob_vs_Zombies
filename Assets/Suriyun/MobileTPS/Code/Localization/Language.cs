@@ -12,12 +12,15 @@ namespace Suriyun.MobileTPS
 
         private void Awake()
         {
+            
             if (Instance == null)
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
 
                 //CurrentLanguage = GetLanguage();
+                if (Application.isEditor)
+                    return;
                 LocalizationManager.Instance.SetLocale(GetLanguage());
             }
             else
