@@ -32,7 +32,7 @@ namespace Suriyun.MobileTPS
             _bulletPool.GetFreeElement(_shootPoint);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             UpdateTrajectory();
         }

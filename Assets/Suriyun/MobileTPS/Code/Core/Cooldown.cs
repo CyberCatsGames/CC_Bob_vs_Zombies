@@ -12,6 +12,8 @@ namespace Suriyun.MobileTPS
 
         public bool IsReady => _timesUp <= Time.time;
 
+        public float Value => _value;
+
         public void Reset()
         {
             _timesUp = _value + Time.time;
