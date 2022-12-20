@@ -4,20 +4,22 @@ namespace Suriyun.MobileTPS
 {
     public class PlayerShooter : MonoBehaviour
     {
-        [SerializeField] private Gun _gun;
+        [SerializeField] private GunSwitcher _switcher;
+
+        private Gun Gun => _switcher.CurrentGun;
 
         private float _timer;
 
-        public bool ShowAim => _gun.ShowAim;
+        public bool ShowAim => Gun.ShowAim;
 
-        public TrajectoryRenderer Trajectory => _gun.Trajectory != null ? _gun.Trajectory : null;
+        public TrajectoryRenderer Trajectory => Gun.Trajectory != null ? Gun.Trajectory : null;
 
         public void TryShoot()
         {
-            if (_gun.Cooldown.IsReady == true)
+            if (Gun.Cooldown.IsReady == true)
             {
-                _gun.Shoot();
-                _gun.Cooldown.Reset();
+                Gun.Shoot();
+                Gun.Cooldown.Reset();
             }
         }
     }
