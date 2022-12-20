@@ -79,6 +79,8 @@ namespace Suriyun.MobileTPS
                 _explodeCoroutine = null;
             }
 
+            _explodeCoroutine = StartCoroutine(Explode());
+
             Rigidbody.isKinematic = false;
             _isGrounded = false;
             base.Die();
