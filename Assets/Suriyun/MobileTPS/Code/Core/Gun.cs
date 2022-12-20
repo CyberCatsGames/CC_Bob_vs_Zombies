@@ -39,7 +39,7 @@ namespace Suriyun.MobileTPS
 
         protected virtual void UpdateTrajectory()
         {
-            if (_trajectory != null)
+            if (_trajectory != null && _trajectory.gameObject.activeInHierarchy)
                 _trajectory.ShowTrajectory(_shootPoint.position, _speed * _shootPoint.forward);
         }
     }

@@ -23,8 +23,7 @@ namespace Suriyun.MobileTPS
             if (_spawnCoroutine != null)
                 return;
 
-            print("StartSPawning");
-
+            print("StartSpawning");
             _spawnCoroutine = StartCoroutine(Spawn());
         }
 
@@ -39,7 +38,9 @@ namespace Suriyun.MobileTPS
         private IEnumerator Spawn()
         {
             _killCount = 0;
-            _currentWaveIndex %= _waves.Count;
+
+            _currentWaveIndex = GameSession.Instance.PlayerInfo.CurrentWaveIndex;
+            _currentWaveIndex = Mathf.Clamp(_currentWaveIndex, 0, _waves.Count - 1);
 
             var wave = _waves[_currentWaveIndex];
             int count = WaveEnemyCount;
@@ -64,7 +65,6 @@ namespace Suriyun.MobileTPS
             if (WaveEnemyCount == _killCount)
             {
                 WaveFinished?.Invoke();
-                _currentWaveIndex++;
             }
         }
     }

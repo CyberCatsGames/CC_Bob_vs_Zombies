@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 using System.Collections;
 using System;
 using Object = UnityEngine.Object;
@@ -9,10 +8,7 @@ namespace Suriyun.MobileTPS
 {
     public class Agent : MonoBehaviour
     {
-        public GameCamera game_camera;
-
         public BehaviourControl behaviour;
-        // [SerializeField] private Pool _effectsPool;
 
         [HideInInspector] public Transform trans;
 
@@ -21,18 +17,19 @@ namespace Suriyun.MobileTPS
 
         public GameObject fx_on_hit;
 
-        public UnityEvent ActorDiedEvent;
+        public GameCamera GameCamera { get; private set; }
 
         private void Awake()
         {
             trans = transform;
+            GameCamera = FindObjectOfType<GameCamera>();
+
             behaviour.Init(this);
         }
 
         public void Hit(float damage)
         {
             hp -= damage;
-            // _effectsPool.GetFreeElement(trans.position, fx_on_hit.transform.rotation);
             Instantiate(fx_on_hit, trans.position, fx_on_hit.transform.rotation);
         }
 
@@ -86,11 +83,6 @@ namespace Suriyun.MobileTPS
             parent.StartCoroutine(PseudoUpdate());
         }
 
-        private IEnumerator Die()
-        {
-            yield return new WaitForSecondsRealtime(2f);
-        }
-
         private IEnumerator PseudoUpdate()
         {
             while (true)
@@ -108,7 +100,7 @@ namespace Suriyun.MobileTPS
 
         public void StartFiring()
         {
-            parent.game_camera.zoomed = true;
+            parent.GameCamera.zoomed = true;
 
             if (parent.is_alive)
             {
@@ -120,7 +112,7 @@ namespace Suriyun.MobileTPS
         public void StopFiring()
         {
             firing = false;
-            parent.game_camera.zoomed = false;
+            parent.GameCamera.zoomed = false;
         }
 
         public void Hide()
@@ -232,9 +224,6 @@ namespace Suriyun.MobileTPS
             {
                 Vector3 xzPosition = new Vector3(agent.transform.position.x, 0f, agent.transform.position.z);
                 Vector3 xzDestinationPosition = new Vector3(destination.position.x, 0f, destination.position.z);
-
-                Debug.Log(xzPosition);
-                Debug.Log(xzDestinationPosition);
 
                 if (xzPosition == xzDestinationPosition)
                 {

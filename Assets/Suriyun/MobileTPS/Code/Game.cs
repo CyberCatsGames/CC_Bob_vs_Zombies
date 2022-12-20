@@ -15,17 +15,18 @@ namespace Suriyun.MobileTPS
     public class Game : MonoBehaviour
     {
         [SerializeField] private Spawner _spawner;
-        [SerializeField] private Agent _agent;
         [SerializeField] private MapData _mapData;
         [SerializeField] private RectTransform _nextWavePanel;
         [SerializeField] private UnityEngine.UI.Button _nextWaveButton;
+        [SerializeField] private Agent _patricTemplate;
 
         private int _currentShootZoneIndex;
+        private Agent _agent;
 
         public static Game instance;
         public bool BlockInput;
 
-        public Spawner Spawner => _spawner;
+        private Spawner Spawner => _spawner;
 
         public AttackPoints ShootZone => _mapData.ShootZones[_currentShootZoneIndex];
 
@@ -45,6 +46,24 @@ namespace Suriyun.MobileTPS
         {
             _spawner.WaveFinished += OnWaveFinished;
             _nextWaveButton.onClick.AddListener(OnNextWave);
+        }
+
+        private void Start()
+        {
+            var playerInfo = GameSession.Instance.PlayerInfo;
+
+            int index = playerInfo.CurrentWaveIndex;
+            _currentShootZoneIndex = GameSession.Instance.PlayerInfo.CurrentWaveIndex;
+
+            var targetPosition = _mapData
+                .ShootZones[index]
+                .MovePoints[0].position;
+
+            _agent = Instantiate(
+                _patricTemplate,
+                targetPosition,
+                Quaternion.identity
+            );
         }
 
         private void OnDisable()
@@ -84,6 +103,7 @@ namespace Suriyun.MobileTPS
                 0,
                 _mapData.ShootZones.Count - 1);
 
+            GameSession.Instance.Save(_currentShootZoneIndex);
             _nextWavePanel.gameObject.SetActive(false);
             _agent.GoToNextWave(() => _spawner.StartSpawning());
         }
