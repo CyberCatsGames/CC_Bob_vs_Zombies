@@ -9,7 +9,8 @@ namespace Suriyun.MobileTPS
 
         public void Change(float currentHealth)
         {
-            _bar.fillAmount = currentHealth / GameSession.Instance.PlayerInfo.Health;
+            float fillAmount = currentHealth / GameSession.Instance.PlayerInfo.Health;
+            _bar.fillAmount = fillAmount;
         }
     }
 }

@@ -32,13 +32,14 @@ namespace Suriyun.MobileTPS
 
             _maxHealth = GameSession.Instance.PlayerInfo.Health;
             CurrentHealth = _maxHealth;
+            _healthBar.Change(CurrentHealth);
             behaviour.Init(this);
         }
 
         public void Hit(float damage)
         {
             CurrentHealth -= (int)damage;
-            _healthBar.Change(damage);
+            _healthBar.Change(CurrentHealth);
             Instantiate(fx_on_hit, trans.position, fx_on_hit.transform.rotation);
         }
 
