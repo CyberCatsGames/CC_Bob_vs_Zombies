@@ -114,8 +114,8 @@ namespace Suriyun.MobileTPS
 
         private void OnNextWave()
         {
-            GameSession.Instance.SaveZonePosition(_currentShootZoneIndex);
             _currentShootZoneIndex++;
+            GameSession.Instance.SaveZonePosition(_currentShootZoneIndex);
 
             _currentShootZoneIndex = Mathf.Clamp(
                 _currentShootZoneIndex,

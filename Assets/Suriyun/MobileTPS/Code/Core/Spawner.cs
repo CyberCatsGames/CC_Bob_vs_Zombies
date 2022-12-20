@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,10 @@ namespace Suriyun.MobileTPS
     public class Spawner : MonoBehaviour
     {
         [SerializeField] private List<Wave> _waves;
+
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private TMP_Text _waveNumber;
+        [SerializeField] private TMP_Text _sessionKills;
 
         private Coroutine _spawnCoroutine;
         private int _currentWaveIndex;
@@ -47,6 +52,11 @@ namespace Suriyun.MobileTPS
             _currentWaveIndex = GameSession.Instance.PlayerInfo.CurrentWaveIndex;
             _currentWaveIndex = Mathf.Clamp(_currentWaveIndex, 0, _waves.Count - 1);
 
+            ShowStats();
+            
+            _sessionKills.text = $"{_targetKillCount} / {WaveEnemyCount}";
+            _waveNumber.text = (_currentWaveIndex + 1).ToString();
+
             var wave = _waves[_currentWaveIndex];
             int count = WaveEnemyCount;
             var waitForSeconds = new WaitForSeconds(wave.Cooldown);
@@ -67,9 +77,10 @@ namespace Suriyun.MobileTPS
             enemy.Died -= OnEnemyDied;
             _targetKillCount++;
             KillsCountSession++;
-            
+
             CoinsCountSession += enemy.Reward;
-            
+            _sessionKills.text = $"{_targetKillCount} / {WaveEnemyCount}";
+
             GameSession.Instance.PlayerInfo.Coins += enemy.Reward;
             GameSession.Instance.SaveCoins();
 
@@ -79,7 +90,18 @@ namespace Suriyun.MobileTPS
             if (WaveEnemyCount == _targetKillCount)
             {
                 WaveFinished?.Invoke();
+                HideStats();
             }
+        }
+
+        private void ShowStats()
+        {
+            _canvasGroup.alpha = 1f;
+        }
+
+        public void HideStats()
+        {
+            _canvasGroup.alpha = 0f;
         }
     }
 
