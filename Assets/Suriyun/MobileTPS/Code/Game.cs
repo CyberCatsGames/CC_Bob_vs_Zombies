@@ -83,6 +83,13 @@ namespace Suriyun.MobileTPS
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
+        public void RestartAllGame()
+        {
+            GameSession.Instance.PlayerInfo.CurrentWaveIndex = 0;
+            GameSession.Instance.Save(0);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
         public void ShowGameOverMenu()
         {
             EventGameOver.Invoke();
