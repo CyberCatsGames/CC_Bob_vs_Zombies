@@ -43,7 +43,6 @@ namespace Suriyun.MobileTPS
     public class BehaviourControl
     {
         [HideInInspector] public Button btn_fire;
-        [HideInInspector] public Button btn_hide;
         [HideInInspector] public Button btn_right;
         [HideInInspector] public Button btn_left;
 
@@ -73,8 +72,6 @@ namespace Suriyun.MobileTPS
 
             if (btn_fire == null)
                 btn_fire = GameObject.Find("+button.fire").GetComponent<Button>();
-            if (btn_hide == null)
-                btn_hide = GameObject.Find("+button.hide").GetComponent<Button>();
             if (btn_right == null)
                 btn_right = GameObject.Find("+button.right").GetComponent<Button>();
             if (btn_left == null)
@@ -113,15 +110,6 @@ namespace Suriyun.MobileTPS
         {
             firing = false;
             parent.GameCamera.zoomed = false;
-        }
-
-        public void Hide()
-        {
-            if (parent.is_alive)
-            {
-                firing = false;
-                agent.Stop();
-            }
         }
 
         public void GoLeft()
@@ -168,11 +156,6 @@ namespace Suriyun.MobileTPS
                 if (btn_right.pressed || Input.GetKeyDown(KeyCode.D))
                 {
                     GoRight();
-                }
-
-                if (btn_hide.pressed || Input.GetKeyDown(KeyCode.S))
-                {
-                    Hide();
                 }
 
                 if (Input.GetKey(KeyCode.Space))
