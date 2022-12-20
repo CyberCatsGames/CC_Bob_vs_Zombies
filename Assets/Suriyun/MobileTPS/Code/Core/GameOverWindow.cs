@@ -21,6 +21,10 @@ namespace Suriyun.MobileTPS
 
         private static void OnRestartThisWave()
         {
+            var currentWaveIndex = GameSession.Instance.PlayerInfo.CurrentWaveIndex;
+            currentWaveIndex--;
+            currentWaveIndex = Mathf.Max(currentWaveIndex, 0);
+            GameSession.Instance.PlayerInfo.CurrentWaveIndex = currentWaveIndex;
             Game.instance.GameRestart();
         }
 
