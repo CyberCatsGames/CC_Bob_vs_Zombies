@@ -6,5 +6,7 @@ namespace Suriyun.MobileTPS
     public class PlayerInfo
     {
         public int CurrentWaveIndex;
+        public int Coins;
+        public int KillsCount;
     }
 }

@@ -13,8 +13,12 @@ namespace Suriyun.MobileTPS
 
         private Coroutine _spawnCoroutine;
         private int _currentWaveIndex;
-        private int _killCount;
+        private int _targetKillCount;
+        private int _coinsSessionCount;
+
         private int WaveEnemyCount => _waves[_currentWaveIndex].EnemyCount;
+
+        public int KillsCountSession { get; private set; }
 
         public event Action WaveFinished;
 
@@ -37,7 +41,7 @@ namespace Suriyun.MobileTPS
 
         private IEnumerator Spawn()
         {
-            _killCount = 0;
+            _targetKillCount = 0;
 
             _currentWaveIndex = GameSession.Instance.PlayerInfo.CurrentWaveIndex;
             _currentWaveIndex = Mathf.Clamp(_currentWaveIndex, 0, _waves.Count - 1);
@@ -60,9 +64,17 @@ namespace Suriyun.MobileTPS
         private void OnEnemyDied(Enemy enemy)
         {
             enemy.Died -= OnEnemyDied;
-            _killCount++;
+            _targetKillCount++;
+            KillsCountSession++;
+            _coinsSessionCount += enemy.Reward;
+            
+            GameSession.Instance.PlayerInfo.Coins += enemy.Reward;
+            GameSession.Instance.SaveCoins();
 
-            if (WaveEnemyCount == _killCount)
+            GameSession.Instance.PlayerInfo.KillsCount++;
+            GameSession.Instance.SaveKills();
+
+            if (WaveEnemyCount == _targetKillCount)
             {
                 WaveFinished?.Invoke();
             }

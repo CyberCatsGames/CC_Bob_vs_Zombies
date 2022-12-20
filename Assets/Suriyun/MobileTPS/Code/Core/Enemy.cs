@@ -9,10 +9,13 @@ namespace Suriyun.MobileTPS
     {
         [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private float _health = 100f;
+        [SerializeField] private int _reward = 1;
         [HideInInspector] public Agent[] agents;
         [HideInInspector] public Animator _animator;
-        private string _state;
 
+        public int Reward => _reward;
+
+        private string _state;
         private NavMeshAgent _agent;
         private Agent target;
 

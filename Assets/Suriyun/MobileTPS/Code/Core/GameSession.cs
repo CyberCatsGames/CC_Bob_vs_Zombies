@@ -11,6 +11,8 @@ namespace Suriyun.MobileTPS
         public PlayerInfo PlayerInfo => _playerInfo;
 
         private const string WaveIndex = "WaveIndex";
+        private const string CoinsTag = "Coins";
+        private const string KillsTag = "KillsCount";
 
         private void Awake()
         {
@@ -26,17 +28,29 @@ namespace Suriyun.MobileTPS
             }
         }
 
-        public void Save(int currentShootZoneIndex)
+        public void SaveZonePosition(int currentShootZoneIndex)
         {
             _playerInfo.CurrentWaveIndex = currentShootZoneIndex;
             PlayerPrefs.SetInt(WaveIndex, currentShootZoneIndex);
+        }
+
+        public void SaveCoins()
+        {
+            PlayerPrefs.SetInt(CoinsTag, PlayerInfo.Coins);
+        }
+
+        public void SaveKills()
+        {
+            PlayerPrefs.SetInt(KillsTag, PlayerInfo.KillsCount);
         }
 
         public void LoadLastSave()
         {
             _playerInfo = new PlayerInfo
             {
-                CurrentWaveIndex = PlayerPrefs.GetInt(WaveIndex, _playerInfo.CurrentWaveIndex)
+                CurrentWaveIndex = PlayerPrefs.GetInt(WaveIndex, _playerInfo.CurrentWaveIndex),
+                Coins = PlayerPrefs.GetInt(WaveIndex, _playerInfo.Coins),
+                KillsCount = PlayerPrefs.GetInt(KillsTag, _playerInfo.KillsCount)
             };
         }
     }

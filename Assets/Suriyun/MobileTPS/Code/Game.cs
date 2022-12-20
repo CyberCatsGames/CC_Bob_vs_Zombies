@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 namespace Suriyun.MobileTPS
 {
@@ -21,6 +22,8 @@ namespace Suriyun.MobileTPS
         [SerializeField] private Agent _patricTemplate;
 
         private int _currentShootZoneIndex;
+        private int _coinsCount;
+
         private Agent _agent;
 
         public static Game instance;
@@ -35,6 +38,10 @@ namespace Suriyun.MobileTPS
         public UnityEvent EventGameStart;
         public UnityEvent EventGameRestart;
         public UnityEvent EventGameOver;
+
+        [Space(10)] [SerializeField] private TMP_Text _currentKillsCountTextView;
+        [SerializeField] private TMP_Text _totalKillsCountView;
+        [SerializeField] private TMP_Text _coinsCountTextView;
 
         private void Awake()
         {
@@ -86,7 +93,7 @@ namespace Suriyun.MobileTPS
         public void RestartAllGame()
         {
             GameSession.Instance.PlayerInfo.CurrentWaveIndex = 0;
-            GameSession.Instance.Save(0);
+            GameSession.Instance.SaveZonePosition(0);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
@@ -98,11 +105,16 @@ namespace Suriyun.MobileTPS
 
         private void OnWaveFinished()
         {
+            _currentKillsCountTextView.text = _spawner.KillsCountSession.ToString();
+            _totalKillsCountView.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
+            _coinsCountTextView.text = GameSession.Instance.PlayerInfo.Coins.ToString();
+
             _nextWavePanel.gameObject.SetActive(true);
         }
 
         private void OnNextWave()
         {
+            GameSession.Instance.SaveZonePosition(_currentShootZoneIndex);
             _currentShootZoneIndex++;
 
             _currentShootZoneIndex = Mathf.Clamp(
@@ -110,7 +122,6 @@ namespace Suriyun.MobileTPS
                 0,
                 _mapData.ShootZones.Count - 1);
 
-            GameSession.Instance.Save(_currentShootZoneIndex);
             _nextWavePanel.gameObject.SetActive(false);
             _agent.GoToNextWave(() => _spawner.StartSpawning());
         }
