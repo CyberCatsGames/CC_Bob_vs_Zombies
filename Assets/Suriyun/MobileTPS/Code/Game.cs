@@ -107,7 +107,7 @@ namespace Suriyun.MobileTPS
         {
             _currentKillsCountTextView.text = _spawner.KillsCountSession.ToString();
             _totalKillsCountView.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
-            _coinsCountTextView.text = GameSession.Instance.PlayerInfo.Coins.ToString();
+            _coinsCountTextView.text = _spawner.CoinsCountSession.ToString();
 
             _nextWavePanel.gameObject.SetActive(true);
         }
