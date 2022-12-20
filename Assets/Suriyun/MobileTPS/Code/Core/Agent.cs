@@ -12,24 +12,33 @@ namespace Suriyun.MobileTPS
 
         [HideInInspector] public Transform trans;
 
-        public float hp = 15;
         public bool is_alive = true;
 
         public GameObject fx_on_hit;
 
+        private HealthBarView _healthBar;
+
         public GameCamera GameCamera { get; private set; }
+
+        private int _maxHealth;
+
+        public int CurrentHealth { get; private set; }
 
         private void Awake()
         {
             trans = transform;
             GameCamera = FindObjectOfType<GameCamera>();
+            _healthBar = FindObjectOfType<HealthBarView>();
 
+            _maxHealth = GameSession.Instance.PlayerInfo.Health;
+            CurrentHealth = _maxHealth;
             behaviour.Init(this);
         }
 
         public void Hit(float damage)
         {
-            hp -= damage;
+            CurrentHealth -= (int)damage;
+            _healthBar.Change(damage);
             Instantiate(fx_on_hit, trans.position, fx_on_hit.transform.rotation);
         }
 
@@ -85,7 +94,7 @@ namespace Suriyun.MobileTPS
             while (true)
             {
                 Update();
-                if (parent.hp <= 0)
+                if (parent.CurrentHealth <= 0)
                 {
                     parent.is_alive = false;
                     Game.instance.EventGameOver.Invoke();
@@ -190,7 +199,7 @@ namespace Suriyun.MobileTPS
 
             Move();
 
-            animator.SetFloat("hp", parent.hp);
+            animator.SetFloat("hp", parent.CurrentHealth);
             if (!parent.is_alive)
             {
                 parent.StopAllCoroutines();

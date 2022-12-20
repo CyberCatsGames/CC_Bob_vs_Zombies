@@ -8,5 +8,6 @@ namespace Suriyun.MobileTPS
         public int CurrentWaveIndex;
         public int Coins;
         public int KillsCount;
+        public int Health = 15;
     }
 }
