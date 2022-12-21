@@ -59,6 +59,8 @@ namespace Suriyun.MobileTPS
 
         protected override void Die()
         {
+            Instantiate(HitEffect, transform.position, Quaternion.identity);
+
             _isGrounded = false;
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.angularVelocity = Vector3.zero;

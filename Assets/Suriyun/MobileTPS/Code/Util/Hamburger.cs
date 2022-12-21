@@ -6,15 +6,13 @@ namespace Suriyun.MobileTPS
 {
     public class Hamburger : MYBullet
     {
-        [SerializeField] private int _hitCountAfterFall = 3;
-        [SerializeField] private float _repeatRate = 1f;
         [SerializeField] private float _radius = 2f;
         [SerializeField] private LayerMask _enemyLayer;
 
         private readonly Collider[] _results = new Collider[20];
 
+        private bool _exploded;
         private bool _isGrounded;
-        private Coroutine _explodeCoroutine;
 
         protected override void OnCollisionEnter(Collision collision)
         {
@@ -24,9 +22,6 @@ namespace Suriyun.MobileTPS
                 Rigidbody.isKinematic = true;
                 Invoke(nameof(TurnOffKinematic), 0.12f);
                 CancelInvoke(nameof(Die));
-
-
-                _explodeCoroutine = StartCoroutine(Explode());
             }
         }
 
@@ -35,27 +30,25 @@ namespace Suriyun.MobileTPS
             Rigidbody.isKinematic = false;
         }
 
-        private IEnumerator Explode()
+        public void TryExplode()
         {
-            var repeatRate = new WaitForSeconds(_repeatRate);
+            if (_exploded == true)
+                return;
 
-            for (int i = 0; i < _hitCountAfterFall; i++)
+            _exploded = true;
+
+            var size = Physics.OverlapSphereNonAlloc(transform.position, _radius, _results, _enemyLayer);
+
+            for (int j = 0; j < size; j++)
             {
-                var size = Physics.OverlapSphereNonAlloc(transform.position, _radius, _results, _enemyLayer);
+                if (_results[j] == null)
+                    continue;
 
-                for (int j = 0; j < size; j++)
-                {
-                    if (_results[j] == null)
-                        continue;
-
-                    var enemy = _results[j].GetComponent<Enemy>();
-                    enemy.ApplyDamage(Damage);
-                }
-
-                yield return repeatRate;
+                var enemy = _results[j].GetComponent<Enemy>();
+                enemy.ApplyDamage(Damage);
             }
 
-            _explodeCoroutine = null;
+            Instantiate(HitEffect, transform.position, Quaternion.identity);
             Die();
         }
 
@@ -73,16 +66,10 @@ namespace Suriyun.MobileTPS
 
         protected override void Die()
         {
-            if (_explodeCoroutine != null)
-            {
-                StopCoroutine(_explodeCoroutine);
-                _explodeCoroutine = null;
-            }
-
-            _explodeCoroutine = StartCoroutine(Explode());
-
+            TryExplode();
             Rigidbody.isKinematic = false;
             _isGrounded = false;
+            _exploded = false;
             base.Die();
         }
 
