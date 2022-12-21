@@ -81,7 +81,7 @@ namespace Suriyun.MobileTPS
             }
         }
 
-        private T CreateElement(bool isActiveByDefault = false)
+        protected virtual T CreateElement(bool isActiveByDefault = false)
         {
             var createdObject = Instantiate(_prefab, _container);
             createdObject.gameObject.SetActive(isActiveByDefault);

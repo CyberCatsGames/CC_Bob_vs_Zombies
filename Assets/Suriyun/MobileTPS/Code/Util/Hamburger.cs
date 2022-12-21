@@ -57,7 +57,7 @@ namespace Suriyun.MobileTPS
         {
             yield return null;
             yield return null;
-            Rigidbody.useGravity = true;
+            
             Rigidbody.angularVelocity = Vector3.zero;
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);

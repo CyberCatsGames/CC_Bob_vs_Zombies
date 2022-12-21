@@ -34,16 +34,15 @@ namespace Suriyun.MobileTPS
 
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            Rigidbody.useGravity = true;
-
             if (collision.gameObject.TryGetComponent(out Enemy enemy))
             {
                 enemy.ApplyDamage(Damage);
                 HitEffect.transform.position = collision.contacts[0].point;
                 HitEffect.Play();
                 CancelInvoke(nameof(Die));
-                Die();
             }
+            
+            Die();
         }
 
         protected virtual void Die()
@@ -58,7 +57,7 @@ namespace Suriyun.MobileTPS
         {
             yield return null;
             yield return null;
-            Rigidbody.useGravity = false;
+            Rigidbody.useGravity = true;
             Rigidbody.angularVelocity = Vector3.zero;
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);

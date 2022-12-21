@@ -19,6 +19,10 @@ namespace Suriyun.MobileTPS
             if (Gun.Cooldown.IsReady == true)
             {
                 Gun.Shoot();
+                
+                if (Gun.ShootEffect != null && Gun.ShootEffect.isPlaying == false)
+                    Gun.ShootEffect.Play();
+                
                 Gun.Cooldown.Reset();
             }
         }

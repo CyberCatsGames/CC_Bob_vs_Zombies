@@ -62,8 +62,6 @@ namespace Suriyun.MobileTPS
             Instantiate(HitEffect, transform.position, Quaternion.identity);
 
             _isGrounded = false;
-            Rigidbody.velocity = Vector3.zero;
-            Rigidbody.angularVelocity = Vector3.zero;
             base.Die();
         }
 

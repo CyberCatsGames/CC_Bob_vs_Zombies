@@ -11,10 +11,8 @@ namespace Suriyun.MobileTPS
         [SerializeField] private BulletPool _bulletPool;
         [SerializeField] private TrajectoryRenderer _trajectory;
         [SerializeField] private bool _showAim;
-
-        protected Transform ShootPoint => _shootPoint;
-
-        protected float Damage => _damage;
+       
+        public ParticleSystem ShootEffect;
 
         public bool ShowAim => _showAim;
 
@@ -37,9 +35,9 @@ namespace Suriyun.MobileTPS
             UpdateTrajectory();
         }
 
-        protected virtual void UpdateTrajectory()
+        private void UpdateTrajectory()
         {
-            if (_trajectory != null && _trajectory.gameObject.activeInHierarchy)
+            if (_trajectory.gameObject.activeInHierarchy)
                 _trajectory.ShowTrajectory(_shootPoint.position, _speed * _shootPoint.forward);
         }
     }
