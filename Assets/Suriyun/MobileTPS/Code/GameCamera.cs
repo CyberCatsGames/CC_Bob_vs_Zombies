@@ -15,8 +15,10 @@ namespace Suriyun.MobileTPS
 
         public Transform aimer;
         public ScreenTransformGesture screen_gesture;
-        public float screen_rotation_speed = 0.33f;
-        public float screen_rotation_smoothness = 16.66f;
+
+        [Space(5f)] [SerializeField] private float _pcRotationSpeed = 8f;
+        public float _mobile_screen_rotation_speed = 0.33f;
+        [Space(5f)] public float screen_rotation_smoothness = 16.66f;
 
         public bool zoomed = false;
         public float zoomed_speed_multiplier = 0.33f;
@@ -31,10 +33,36 @@ namespace Suriyun.MobileTPS
             aimer.rotation = trans.rotation;
             cam = GetComponent<Camera>();
             player = FindObjectOfType<Agent>().gameObject;
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void Update()
         {
+            if (Application.isMobilePlatform == false)
+            {
+                aimer.position = Vector3.back;
+
+                Vector3 rotate_horizontal = Vector3.up * (Input.GetAxis("Mouse X") * _pcRotationSpeed);
+                Vector3 rotate_vertical = aimer.right * (-1f * Input.GetAxis("Mouse Y") * _pcRotationSpeed);
+
+                if (zoomed)
+                {
+                    rotate_horizontal *= zoomed_speed_multiplier;
+                    rotate_vertical *= zoomed_speed_multiplier;
+                }
+
+                Quaternion tmp = aimer.rotation;
+                aimer.Rotate(rotate_vertical, Space.World);
+                if (aimer.up.y < 0)
+                {
+                    aimer.rotation = tmp;
+                }
+
+                aimer.Rotate(rotate_horizontal, Space.World);
+            }
+
             // Zoom control //
             if (zoomed)
             {
@@ -88,9 +116,15 @@ namespace Suriyun.MobileTPS
 
         private void FullScreenHandler(object sender, System.EventArgs e)
         {
+            if (Application.isMobilePlatform == false)
+            {
+                return;
+            }
+
             // Aim camera //
-            Vector3 rotate_horizontal = Vector3.up * screen_gesture.DeltaPosition.x * screen_rotation_speed;
-            Vector3 rotate_vertical = aimer.right * (-1f) * screen_gesture.DeltaPosition.y * screen_rotation_speed;
+            Vector3 rotate_horizontal = Vector3.up * screen_gesture.DeltaPosition.x * _mobile_screen_rotation_speed;
+            Vector3 rotate_vertical =
+                aimer.right * (-1f) * screen_gesture.DeltaPosition.y * _mobile_screen_rotation_speed;
 
             if (zoomed)
             {

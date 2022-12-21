@@ -246,15 +246,12 @@ namespace TouchScript.Gestures.Base
         /// </summary>
         protected bool isTransforming = false;
 
-        [SerializeField]
-        private TransformType type = TransformType.Translation | TransformType.Scaling |
-                                     TransformType.Rotation;
+        [SerializeField] private TransformType type = TransformType.Translation | TransformType.Scaling |
+                                                      TransformType.Rotation;
 
-        [SerializeField]
-        private float minScreenPointsDistance = 0.5f;
+        [SerializeField] private float minScreenPointsDistance = 0.5f;
 
-        [SerializeField]
-        private float screenTransformThreshold = 0.1f;
+        [SerializeField] private float screenTransformThreshold = 0.1f;
 
         #endregion
 
@@ -330,9 +327,9 @@ namespace TouchScript.Gestures.Base
             {
                 if (!translationEnabled) return; // don't look for translates
                 if (!relevantTouches1(touches)) return;
-
                 // translate using one point
-                dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0), projectionParams);
+                dP = doOnePointTranslation(getPointPreviousScreenPosition(0), getPointScreenPosition(0),
+                    projectionParams);
             }
             else
             {
@@ -354,7 +351,8 @@ namespace TouchScript.Gestures.Base
                     {
                         if (isTransforming)
                         {
-                            dR = doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
+                            dR = doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
+                                projectionParams);
                         }
                         else
                         {
@@ -363,7 +361,8 @@ namespace TouchScript.Gestures.Base
                             TwoD.PointToLineDistance2(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
                                 out d1, out d2);
                             screenPixelRotationBuffer += (d1 - d2);
-                            angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
+                            angleBuffer += doRotation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
+                                projectionParams);
 
                             if (screenPixelRotationBuffer * screenPixelRotationBuffer >=
                                 screenTransformPixelThresholdSquared)
@@ -378,7 +377,8 @@ namespace TouchScript.Gestures.Base
                     {
                         if (isTransforming)
                         {
-                            dS *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
+                            dS *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
+                                projectionParams);
                         }
                         else
                         {
@@ -386,7 +386,8 @@ namespace TouchScript.Gestures.Base
                             var newDistance = newScreenDelta.magnitude;
                             var oldDistance = oldScreenDelta.magnitude;
                             screenPixelScalingBuffer += newDistance - oldDistance;
-                            scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, projectionParams);
+                            scaleBuffer *= doScaling(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2,
+                                projectionParams);
 
                             if (screenPixelScalingBuffer * screenPixelScalingBuffer >=
                                 screenTransformPixelThresholdSquared)
@@ -399,9 +400,11 @@ namespace TouchScript.Gestures.Base
 
                     if (translationEnabled)
                     {
-                        if (dR == 0 && dS == 1) dP = doOnePointTranslation(oldScreenPos1, newScreenPos1, projectionParams);
+                        if (dR == 0 && dS == 1)
+                            dP = doOnePointTranslation(oldScreenPos1, newScreenPos1, projectionParams);
                         else
-                            dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR, dS, projectionParams);
+                            dP = doTwoPointTranslation(oldScreenPos1, oldScreenPos2, newScreenPos1, newScreenPos2, dR,
+                                dS, projectionParams);
                     }
                 }
                 else if (translationEnabled)
@@ -515,7 +518,7 @@ namespace TouchScript.Gestures.Base
         /// <param name="projectionParams"> Layer projection parameters. </param>
         /// <returns> Angle in degrees. </returns>
         protected virtual float doRotation(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
-                                           Vector2 newScreenPos2, ProjectionParams projectionParams)
+            Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return 0;
         }
@@ -530,7 +533,7 @@ namespace TouchScript.Gestures.Base
         /// <param name="projectionParams"> Layer projection parameters. </param>
         /// <returns> Multiplicative delta scaling. </returns>
         protected virtual float doScaling(Vector2 oldScreenPos1, Vector2 oldScreenPos2, Vector2 newScreenPos1,
-                                          Vector2 newScreenPos2, ProjectionParams projectionParams)
+            Vector2 newScreenPos2, ProjectionParams projectionParams)
         {
             return 1;
         }
@@ -543,7 +546,7 @@ namespace TouchScript.Gestures.Base
         /// <param name="projectionParams"> Layer projection parameters. </param>
         /// <returns> Delta translation vector. </returns>
         protected virtual Vector3 doOnePointTranslation(Vector2 oldScreenPos, Vector2 newScreenPos,
-                                                        ProjectionParams projectionParams)
+            ProjectionParams projectionParams)
         {
             return Vector3.zero;
         }
@@ -560,7 +563,7 @@ namespace TouchScript.Gestures.Base
         /// <param name="projectionParams"> Layer projection parameters. </param>
         /// <returns> Delta translation vector. </returns>
         protected virtual Vector3 doTwoPointTranslation(Vector2 oldScreenPos1, Vector2 oldScreenPos2,
-                                                        Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
+            Vector2 newScreenPos1, Vector2 newScreenPos2, float dR, float dS, ProjectionParams projectionParams)
         {
             return Vector3.zero;
         }
@@ -587,6 +590,7 @@ namespace TouchScript.Gestures.Base
             {
                 if (touches[i] == activeTouches[0]) return true;
             }
+
             return false;
         }
 
@@ -604,6 +608,7 @@ namespace TouchScript.Gestures.Base
                 var touch = touches[i];
                 if (touch == activeTouches[0] || touch == activeTouches[1]) return true;
             }
+
             return false;
         }
 
