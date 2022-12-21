@@ -34,8 +34,8 @@ namespace Suriyun.MobileTPS
             cam = GetComponent<Camera>();
             player = FindObjectOfType<Agent>().gameObject;
 
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            // Cursor.visible = false;
+            // Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void Update()
