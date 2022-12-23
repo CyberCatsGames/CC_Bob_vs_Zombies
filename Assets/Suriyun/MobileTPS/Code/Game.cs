@@ -44,6 +44,10 @@ namespace Suriyun.MobileTPS
         [Space(10)] [SerializeField] private TMP_Text _currentKillsCountTextView;
         [SerializeField] private TMP_Text _totalKillsCountView;
         [SerializeField] private TMP_Text _coinsCountTextView;
+        
+        [Space(10)] [SerializeField] private TMP_Text _currentKillsCountTextView1;
+        [SerializeField] private TMP_Text _totalKillsCountView1;
+        [SerializeField] private TMP_Text _coinsCountTextView1;
 
         private void Awake()
         {
@@ -132,6 +136,10 @@ namespace Suriyun.MobileTPS
             _currentKillsCountTextView.text = _spawner.KillsCountSession.ToString();
             _totalKillsCountView.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
             _coinsCountTextView.text = _spawner.CoinsCountSession.ToString();
+            
+            _currentKillsCountTextView1.text = _spawner.KillsCountSession.ToString();
+            _totalKillsCountView1.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
+            _coinsCountTextView1.text = _spawner.CoinsCountSession.ToString();
         }
     }
 
