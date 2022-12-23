@@ -41,8 +41,11 @@ namespace Suriyun.MobileTPS
             }
         }
 
-        private void SelectGun()
+        public void SelectGun(int currentGun = -1)
         {
+            if (currentGun != -1)
+                _currentGun = currentGun;
+
             for (var i = 0; i < _guns.Length; i++)
             {
                 _guns[i].gameObject.SetActive(i == _currentGun);

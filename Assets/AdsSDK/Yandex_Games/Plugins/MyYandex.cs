@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MyYandex : MonoBehaviour {
     #region DLL's
@@ -84,7 +81,7 @@ public class MyYandex : MonoBehaviour {
     #endregion
 
     #region OTHER
-    public void AddReward() { // Вызывается из файла jslib когда видеореклама просмотрена
+    public void AddReward() { // Г‚Г»Г§Г»ГўГ ГҐГІГ±Гї ГЁГ§ ГґГ Г©Г«Г  jslib ГЄГ®ГЈГ¤Г  ГўГЁГ¤ГҐГ®Г°ГҐГЄГ«Г Г¬Г  ГЇГ°Г®Г±Г¬Г®ГІГ°ГҐГ­Г 
 
         //DebugReward(DebugCoins);
         AdResult(true);

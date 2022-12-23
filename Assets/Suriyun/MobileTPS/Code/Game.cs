@@ -33,6 +33,8 @@ namespace Suriyun.MobileTPS
 
         public AttackPoints ShootZone => _mapData.ShootZones[_currentShootZoneIndex];
 
+        public GunSwitcher GunSwitcher;
+
         private const int TARGET_FRAME_RATE = 60;
 
         public UnityEvent EventGameStart;
@@ -71,6 +73,8 @@ namespace Suriyun.MobileTPS
                 targetPosition,
                 Quaternion.identity
             );
+
+            GunSwitcher = _agent.GetComponentInChildren<GunSwitcher>();
         }
 
         private void OnDisable()
