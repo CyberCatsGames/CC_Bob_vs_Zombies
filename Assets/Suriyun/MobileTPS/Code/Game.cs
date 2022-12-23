@@ -33,7 +33,7 @@ namespace Suriyun.MobileTPS
 
         public AttackPoints ShootZone => _mapData.ShootZones[_currentShootZoneIndex];
 
-        public GunSwitcher GunSwitcher;
+        public GunSwitcher GunSwitcher { get; private set; }
 
         private const int TARGET_FRAME_RATE = 60;
 
@@ -109,10 +109,7 @@ namespace Suriyun.MobileTPS
 
         private void OnWaveFinished()
         {
-            _currentKillsCountTextView.text = _spawner.KillsCountSession.ToString();
-            _totalKillsCountView.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
-            _coinsCountTextView.text = _spawner.CoinsCountSession.ToString();
-
+            SetTextsValues();
             _nextWavePanel.gameObject.SetActive(true);
         }
 
@@ -128,6 +125,13 @@ namespace Suriyun.MobileTPS
 
             _nextWavePanel.gameObject.SetActive(false);
             _agent.GoToNextWave(() => _spawner.StartSpawning());
+        }
+
+        public void SetTextsValues()
+        {
+            _currentKillsCountTextView.text = _spawner.KillsCountSession.ToString();
+            _totalKillsCountView.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
+            _coinsCountTextView.text = _spawner.CoinsCountSession.ToString();
         }
     }
 
