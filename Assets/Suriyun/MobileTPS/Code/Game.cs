@@ -23,6 +23,7 @@ namespace Suriyun.MobileTPS
 
         private int _currentShootZoneIndex;
         private int _coinsCount;
+        private GameCamera _gameCamera;
 
         private Agent _agent;
 
@@ -44,7 +45,7 @@ namespace Suriyun.MobileTPS
         [Space(10)] [SerializeField] private TMP_Text _currentKillsCountTextView;
         [SerializeField] private TMP_Text _totalKillsCountView;
         [SerializeField] private TMP_Text _coinsCountTextView;
-        
+
         [Space(10)] [SerializeField] private TMP_Text _currentKillsCountTextView1;
         [SerializeField] private TMP_Text _totalKillsCountView1;
         [SerializeField] private TMP_Text _coinsCountTextView1;
@@ -63,6 +64,7 @@ namespace Suriyun.MobileTPS
 
         private void Start()
         {
+            _gameCamera = FindObjectOfType<GameCamera>();
             var playerInfo = GameSession.Instance.PlayerInfo;
 
             int index = playerInfo.CurrentWaveIndex;
@@ -109,16 +111,19 @@ namespace Suriyun.MobileTPS
         {
             EventGameOver.Invoke();
             Spawner.StopSpawning();
+            _gameCamera.BlockRotate();
         }
 
         private void OnWaveFinished()
         {
             SetTextsValues();
             _nextWavePanel.gameObject.SetActive(true);
+            _gameCamera.BlockRotate();
         }
 
         private void OnNextWave()
         {
+            _gameCamera.UnblockRotate();
             _currentShootZoneIndex++;
             GameSession.Instance.SaveZonePosition(_currentShootZoneIndex);
 
@@ -136,7 +141,7 @@ namespace Suriyun.MobileTPS
             _currentKillsCountTextView.text = _spawner.KillsCountSession.ToString();
             _totalKillsCountView.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
             _coinsCountTextView.text = _spawner.CoinsCountSession.ToString();
-            
+
             _currentKillsCountTextView1.text = _spawner.KillsCountSession.ToString();
             _totalKillsCountView1.text = GameSession.Instance.PlayerInfo.KillsCount.ToString();
             _coinsCountTextView1.text = _spawner.CoinsCountSession.ToString();

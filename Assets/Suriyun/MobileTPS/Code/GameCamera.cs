@@ -27,19 +27,36 @@ namespace Suriyun.MobileTPS
         public float fov_normal = 60;
         private Camera cam;
 
+        private bool _isBlocked;
+
         private void Start()
         {
             trans = transform;
             aimer.rotation = trans.rotation;
             cam = GetComponent<Camera>();
             player = FindObjectOfType<Agent>().gameObject;
+            BlockRotate();
+        }
 
-            // Cursor.visible = false;
-            // Cursor.lockState = CursorLockMode.Locked;
+        public void BlockRotate()
+        {
+            Cursor.visible = true;
+            _isBlocked = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        public void UnblockRotate()
+        {
+            Cursor.visible = false;
+            _isBlocked = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void Update()
         {
+            if (_isBlocked == true)
+                return;
+
             if (Application.isMobilePlatform == false)
             {
                 aimer.position = Vector3.back;
