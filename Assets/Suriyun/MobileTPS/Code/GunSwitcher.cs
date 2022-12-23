@@ -16,7 +16,7 @@ namespace Suriyun.MobileTPS
             {
                 if (_currentGun >= _guns.Length - 1)
                 {
-                    _currentGun = _guns.Length - 1;
+                    _currentGun = 0;
                 }
                 else
                 {
@@ -30,7 +30,7 @@ namespace Suriyun.MobileTPS
             {
                 if (_currentGun <= 0)
                 {
-                    _currentGun = 0;
+                    _currentGun = _guns.Length - 1;
                 }
                 else
                 {
