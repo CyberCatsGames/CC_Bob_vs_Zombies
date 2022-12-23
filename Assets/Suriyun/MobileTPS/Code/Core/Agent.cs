@@ -152,6 +152,9 @@ namespace Suriyun.MobileTPS
 
         public void Update()
         {
+            if (parent.GameCamera.IsBlocked == true)
+                return;
+
             UpdateCurrentPosition();
 
             if (Game.instance.BlockInput == false)

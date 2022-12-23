@@ -29,6 +29,8 @@ namespace Suriyun.MobileTPS
 
         private bool _isBlocked;
 
+        public bool IsBlocked => _isBlocked;
+
         private void Start()
         {
             trans = transform;
