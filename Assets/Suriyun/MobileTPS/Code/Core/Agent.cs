@@ -168,12 +168,12 @@ namespace Suriyun.MobileTPS
                     GoRight();
                 }
 
-                if (Input.GetKey(KeyCode.Space))
+                if (Input.GetMouseButton(0))
                 {
                     StartFiring();
                 }
 
-                if (Input.GetKeyUp(KeyCode.Space))
+                if (Input.GetMouseButtonUp(0))
                 {
                     StopFiring();
                 }
