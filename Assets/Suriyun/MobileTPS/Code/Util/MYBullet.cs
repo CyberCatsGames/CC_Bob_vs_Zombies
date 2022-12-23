@@ -37,11 +37,10 @@ namespace Suriyun.MobileTPS
             if (collision.gameObject.TryGetComponent(out Enemy enemy))
             {
                 enemy.ApplyDamage(Damage);
-                HitEffect.transform.position = collision.contacts[0].point;
-                HitEffect.Play();
+                var newEffect = Instantiate(HitEffect, collision.contacts[0].point, Quaternion.identity);
                 CancelInvoke(nameof(Die));
             }
-            
+
             Die();
         }
 

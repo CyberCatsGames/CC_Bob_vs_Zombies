@@ -5,7 +5,7 @@ namespace Suriyun.MobileTPS
     public class TrajectoryRenderer : MonoBehaviour
     {
         [SerializeField] private TrajectoryType _type;
-
+        
         private LineRenderer _renderer;
 
         private void Awake()
