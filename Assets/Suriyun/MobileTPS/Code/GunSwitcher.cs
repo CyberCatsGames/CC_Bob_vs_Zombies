@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Suriyun.MobileTPS
 {
@@ -7,8 +8,14 @@ namespace Suriyun.MobileTPS
         [SerializeField] private Gun[] _guns;
 
         private int _currentGun;
+        private GunSwitcherView _view;
 
         public Gun CurrentGun => _guns[_currentGun];
+
+        private void Start()
+        {
+            _view = FindObjectOfType<GunSwitcherView>();
+        }
 
         private void Update()
         {
@@ -50,6 +57,8 @@ namespace Suriyun.MobileTPS
             {
                 _guns[i].gameObject.SetActive(i == _currentGun);
             }
+
+            _view.SelectGun(_currentGun);
         }
     }
 }

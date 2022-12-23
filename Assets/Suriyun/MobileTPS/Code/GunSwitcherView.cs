@@ -50,11 +50,21 @@ namespace Suriyun.MobileTPS
             Game.instance.GunSwitcher.SelectGun(_currentGunIndex);
         }
 
-        private void SelectGun()
+        public void SelectGun(int index = -1)
         {
-            for (var i = 0; i < _gunViews.Length; i++)
+            if (index == -1)
             {
-                _gunViews[i].gameObject.SetActive(i == _currentGunIndex);
+                for (var i = 0; i < _gunViews.Length; i++)
+                {
+                    _gunViews[i].gameObject.SetActive(i == _currentGunIndex);
+                }
+            }
+            else
+            {
+                for (var i = 0; i < _gunViews.Length; i++)
+                {
+                    _gunViews[i].gameObject.SetActive(i == index);
+                }
             }
         }
     }
