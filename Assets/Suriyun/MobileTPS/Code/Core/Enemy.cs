@@ -7,6 +7,7 @@ namespace Suriyun.MobileTPS
 {
     public class Enemy : MonoBehaviour
     {
+        [SerializeField] private ParticleSystem _hitEffect;
         [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private float _health = 100f;
         [SerializeField] private int _reward = 1;
@@ -53,6 +54,8 @@ namespace Suriyun.MobileTPS
 
             _health -= value;
             _animator.SetFloat("hp", _health);
+
+            Instantiate(_hitEffect, transform.position, Quaternion.identity, transform);
 
             if (_health <= 0f)
             {
