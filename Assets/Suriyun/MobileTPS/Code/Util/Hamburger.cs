@@ -20,7 +20,7 @@ namespace Suriyun.MobileTPS
                 _isGrounded = true;
                 Rigidbody.isKinematic = true;
                 Invoke(nameof(TurnOffKinematic), 0.12f);
-                CancelInvoke(nameof(Die));
+                //CancelInvoke(nameof(Die));
             }
         }
 
