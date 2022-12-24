@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MyYandex : MonoBehaviour {
     #region DLL's
@@ -21,9 +22,7 @@ public class MyYandex : MonoBehaviour {
     //event  
     public static event RewardedAdResult AdResult;
 
-    //public MenuManager _MenuManager;
-
-    //public GameObject KeyboardButton;
+    public UnityEvent AddRewardEvent;
 
     public bool IsMobile = false; // For checking mobile device
 
@@ -65,7 +64,8 @@ public class MyYandex : MonoBehaviour {
         Debug.Log("Show YANDEX Reward AD Intern");
         
         if (Application.isEditor) {
-            AdResult(true);
+            //AdResult(true);
+            AddRewardEvent.Invoke();
             return;
         }
 
@@ -81,10 +81,9 @@ public class MyYandex : MonoBehaviour {
     #endregion
 
     #region OTHER
-    public void AddReward() { // Âûçûâàåòñÿ èç ôàéëà jslib êîãäà âèäåîðåêëàìà ïðîñìîòðåíà
-
-        //DebugReward(DebugCoins);
-        AdResult(true);
+    public void AddReward() { 
+        AddRewardEvent.Invoke();
+        //AdResult(true);
 
     }
     public void YaPauseMusic() {
