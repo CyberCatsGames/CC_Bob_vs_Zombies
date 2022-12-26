@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-
-namespace Suriyun.MobileTPS
+﻿namespace Suriyun.MobileTPS
 {
-    public class SauceThrower : Gun {
-        public AudioSource SouceSound;
-        public override void Shoot() {
+    public class SauceThrower : Gun
+    {
+        public override void Shoot()
+        {
             base.Shoot();
-            SouceSound.Play();
+            SouceSound.Play("shoot");
         }
     }
 }

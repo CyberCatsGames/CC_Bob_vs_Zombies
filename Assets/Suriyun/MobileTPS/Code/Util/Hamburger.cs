@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Suriyun.MobileTPS.Code.Core;
 using UnityEngine;
 
 namespace Suriyun.MobileTPS
@@ -7,6 +8,7 @@ namespace Suriyun.MobileTPS
     {
         [SerializeField] private float _radius = 2f;
         [SerializeField] private LayerMask _enemyLayer;
+        [SerializeField] private PlaySoundsComponent _playSoundsComponent;
 
         private readonly Collider[] _results = new Collider[20];
 
@@ -56,10 +58,11 @@ namespace Suriyun.MobileTPS
         {
             yield return null;
             yield return null;
-            
+
             Rigidbody.angularVelocity = Vector3.zero;
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);
+            _playSoundsComponent.Play("shoot");
             Invoke(nameof(Die), LifeTime);
         }
 

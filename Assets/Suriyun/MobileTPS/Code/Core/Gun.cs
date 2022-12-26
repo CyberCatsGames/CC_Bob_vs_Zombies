@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Suriyun.MobileTPS.Code.Core;
+using UnityEngine;
 
 namespace Suriyun.MobileTPS
 {
@@ -11,7 +12,8 @@ namespace Suriyun.MobileTPS
         [SerializeField] private BulletPool _bulletPool;
         [SerializeField] private TrajectoryRenderer _trajectory;
         [SerializeField] private bool _showAim;
-       
+        public PlaySoundsComponent SouceSound;
+
         public ParticleSystem ShootEffect;
 
         public bool ShowAim => _showAim;

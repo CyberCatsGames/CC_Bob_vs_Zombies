@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
+using Suriyun.MobileTPS.Code.Core;
 using TMPro;
 
 namespace Suriyun.MobileTPS
@@ -20,6 +21,7 @@ namespace Suriyun.MobileTPS
         [SerializeField] private RectTransform _nextWavePanel;
         [SerializeField] private UnityEngine.UI.Button _nextWaveButton;
         [SerializeField] private Agent _patricTemplate;
+        [SerializeField] private PausePanel _pausePanel;
 
         private int _currentShootZoneIndex;
         private int _coinsCount;
@@ -49,6 +51,9 @@ namespace Suriyun.MobileTPS
         [Space(10)] [SerializeField] private TMP_Text _currentKillsCountTextView1;
         [SerializeField] private TMP_Text _totalKillsCountView1;
         [SerializeField] private TMP_Text _coinsCountTextView1;
+        private bool _isPanelActive;
+        private bool _isGameStarted;
+        private bool _isGameFinished;
 
         private void Awake()
         {
@@ -83,6 +88,25 @@ namespace Suriyun.MobileTPS
             GunSwitcher = _agent.GetComponentInChildren<GunSwitcher>();
         }
 
+        private void Update()
+        {
+            if (_isGameStarted == true && _isGameFinished == false && Input.GetKeyDown(KeyCode.Escape))
+            {
+                _isPanelActive = _isPanelActive == false;
+
+                if (_isPanelActive == true)
+                {
+                    _pausePanel.Show();
+                    _agent.GameCamera.BlockRotate();
+                }
+                else
+                {
+                    _pausePanel.Hide();
+                    _agent.GameCamera.UnblockRotate();
+                }
+            }
+        }
+
         private void OnDisable()
         {
             _spawner.WaveFinished -= OnWaveFinished;
@@ -91,6 +115,7 @@ namespace Suriyun.MobileTPS
 
         public void GameStart()
         {
+            _isGameStarted = true;
             EventGameStart.Invoke();
             Spawner.StartSpawning();
         }
@@ -112,6 +137,7 @@ namespace Suriyun.MobileTPS
             EventGameOver.Invoke();
             Spawner.StopSpawning();
             _gameCamera.BlockRotate();
+            _isGameFinished = true;
         }
 
         private void OnWaveFinished()
@@ -119,10 +145,12 @@ namespace Suriyun.MobileTPS
             SetTextsValues();
             _nextWavePanel.gameObject.SetActive(true);
             _gameCamera.BlockRotate();
+            _isGameFinished = true;
         }
 
         private void OnNextWave()
         {
+            _isGameFinished = false;
             _gameCamera.UnblockRotate();
             _currentShootZoneIndex++;
             GameSession.Instance.SaveZonePosition(_currentShootZoneIndex);
