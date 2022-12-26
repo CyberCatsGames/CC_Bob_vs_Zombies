@@ -117,6 +117,7 @@ namespace Suriyun.MobileTPS
 
             Vector3 eulerAngles = aimer.rotation.eulerAngles;
             eulerAngles.y = Mathf.Clamp(eulerAngles.y, _leftBound, _rightBound);
+            eulerAngles.z = 0f;
             aimer.rotation = Quaternion.Euler(eulerAngles);
 
             trans.rotation =
