@@ -171,12 +171,12 @@ namespace Suriyun.MobileTPS
                     GoRight();
                 }
 
-                if (Input.GetMouseButton(0))
+                if (Input.GetMouseButton(0) && Application.isMobilePlatform == false)
                 {
                     StartFiring();
                 }
 
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonUp(0) && Application.isMobilePlatform == false)
                 {
                     StopFiring();
                 }
