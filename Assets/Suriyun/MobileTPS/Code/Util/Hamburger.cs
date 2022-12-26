@@ -9,6 +9,7 @@ namespace Suriyun.MobileTPS
         [SerializeField] private float _radius = 2f;
         [SerializeField] private LayerMask _enemyLayer;
         [SerializeField] private PlaySoundsComponent _playSoundsComponent;
+        [SerializeField] private Collider _trigger;
 
         private readonly Collider[] _results = new Collider[20];
 
@@ -17,7 +18,11 @@ namespace Suriyun.MobileTPS
 
         protected override void OnCollisionEnter(Collision collision)
         {
-            if (_isGrounded == false)
+            if (collision.gameObject.TryGetComponent(out Enemy enemy))
+            {
+                TryExplode();
+            }
+            else if (_isGrounded == false)
             {
                 _isGrounded = true;
                 Rigidbody.isKinematic = true;
@@ -56,6 +61,7 @@ namespace Suriyun.MobileTPS
 
         protected override IEnumerator Setup()
         {
+            _trigger.enabled = false;
             yield return null;
             yield return null;
 
@@ -64,6 +70,12 @@ namespace Suriyun.MobileTPS
             Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);
             _playSoundsComponent.Play("shoot");
             Invoke(nameof(Die), LifeTime);
+            Invoke(nameof(TurnOnTrigger), 0.5f);
+        }
+
+        private void TurnOnTrigger()
+        {
+            _trigger.enabled = true;
         }
 
         protected override void Die()
@@ -72,6 +84,7 @@ namespace Suriyun.MobileTPS
             Rigidbody.isKinematic = false;
             _isGrounded = false;
             _exploded = false;
+            _trigger.enabled = false;
             base.Die();
         }
 
