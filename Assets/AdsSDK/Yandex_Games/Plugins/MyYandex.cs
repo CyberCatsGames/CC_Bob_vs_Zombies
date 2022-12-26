@@ -87,10 +87,10 @@ public class MyYandex : MonoBehaviour {
 
     }
     public void YaPauseMusic() {
-        //SoundManager.Instance.PauseMusic(true);
+        //AllSoundOff
     }
     public void YaUnPauseMusic() {
-        //SoundManager.Instance.PauseMusic(false);
+        //AllSoundOn
     }
 
     public void MobileTurnOn() {
