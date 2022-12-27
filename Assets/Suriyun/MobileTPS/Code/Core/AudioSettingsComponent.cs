@@ -21,5 +21,14 @@ namespace Suriyun.MobileTPS.Code.Core
         {
             _source.mute = true;
         }
+
+        public void BtnPlaySoundDelay(float delay) => Invoke(nameof(PlaySound), delay);
+        private void PlaySound() => _source.Play();
+        public void BtnStopSoundDelay(float delay) => Invoke(nameof(StopSound), delay);
+        private void StopSound() => _source.Stop();
+
+       
+
+      
     }
 }

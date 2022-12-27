@@ -8,9 +8,9 @@ public class BGMusic : MonoBehaviour
     public float delay = 1;
     private void Start() {
         bgMusic = GetComponent<AudioSource>();
-        Invoke(nameof(SoundOn), delay);
+        //Invoke(nameof(SoundOn), delay);
     }
-  private void SoundOn() {
-        bgMusic.Play();
+  public void PlayMusic() {
+        //
     }
 }

@@ -34,13 +34,15 @@ namespace Suriyun.MobileTPS.Code.Core
 
         private void OnSoundsChanged(bool value)
         {
-            if (value == true)
-            {
-                AudioManager.Instance.Sounds.TurnOn();
-            }
-            else
-            {
-                AudioManager.Instance.Sounds.TurnOff();
+            
+            if (value == true) {
+                foreach (var component in AudioManager.Instance.Sounds) {
+                    component.TurnOn();
+                }
+            } else {
+                foreach (var component in AudioManager.Instance.Sounds) {
+                    component.TurnOff();
+                }
             }
         }
 

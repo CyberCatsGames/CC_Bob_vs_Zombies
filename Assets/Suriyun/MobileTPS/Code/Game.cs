@@ -92,18 +92,20 @@ namespace Suriyun.MobileTPS
         {
             if (_isGameStarted == true && _isGameFinished == false && Input.GetKeyDown(KeyCode.Escape))
             {
-                _isPanelActive = _isPanelActive == false;
+                BtnPauseEvent(); 
+            }
 
-                if (_isPanelActive == true)
-                {
-                    _pausePanel.Show();
-                    _agent.GameCamera.BlockRotate();
-                }
-                else
-                {
-                    _pausePanel.Hide();
-                    _agent.GameCamera.UnblockRotate();
-                }
+        }
+
+        public void BtnPauseEvent() {
+            _isPanelActive = _isPanelActive == false;
+
+            if (_isPanelActive == true) {
+                _pausePanel.Show();
+                _agent.GameCamera.BlockRotate();
+            } else {
+                _pausePanel.Hide();
+                _agent.GameCamera.UnblockRotate();
             }
         }
 

@@ -5,7 +5,7 @@ namespace Suriyun.MobileTPS.Code.Core
     public class AudioManager : MonoBehaviour
     {
         public AudioSettingsComponent[] Backgrounds;
-        public AudioSettingsComponent Sounds;
+        public AudioSettingsComponent [] Sounds;
 
         private static AudioManager _instance;
 
