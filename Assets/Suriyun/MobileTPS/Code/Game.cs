@@ -125,10 +125,12 @@ namespace Suriyun.MobileTPS
         public void GameRestart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            EventGameRestart.Invoke();
         }
 
         public void RestartAllGame()
         {
+            PlayerPrefs.DeleteAll();
             GameSession.Instance.PlayerInfo.CurrentWaveIndex = 0;
             GameSession.Instance.SaveZonePosition(0);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
