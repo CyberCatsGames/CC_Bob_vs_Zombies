@@ -1,3 +1,4 @@
+using Suriyun.MobileTPS.Code.Core;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
@@ -39,6 +40,7 @@ public class MyYandex : MonoBehaviour {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
     }
     void Start() {
         //MobileTurnOn();
@@ -88,9 +90,11 @@ public class MyYandex : MonoBehaviour {
     }
     public void YaPauseMusic() {
         //AllSoundOff
+        AudioListener.pause = true;
     }
     public void YaUnPauseMusic() {
         //AllSoundOn
+        AudioListener.pause = false;
     }
 
     public void MobileTurnOn() {

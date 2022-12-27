@@ -11,7 +11,7 @@ public class FocusSoundController : MonoBehaviour
     }
 
     private void Silence(bool silence) {
-        AudioListener.pause = silence;
+        //AudioListener.pause = silence;
         // Or / And
         AudioListener.volume = silence ? 0 : 1;
     }
