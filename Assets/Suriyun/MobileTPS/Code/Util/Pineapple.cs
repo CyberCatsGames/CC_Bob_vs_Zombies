@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Suriyun.MobileTPS
 {
-    public class Pineapple : MYBullet
+    public class Pineapple : Bullet
     {
         [Space(5)] [SerializeField] private float _explosionForce = 400f;
         [SerializeField] private float _radius = 2f;

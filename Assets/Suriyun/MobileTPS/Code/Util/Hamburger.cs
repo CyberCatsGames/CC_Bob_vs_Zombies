@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Suriyun.MobileTPS
 {
-    public class Hamburger : MYBullet
+    public class Hamburger : Bullet
     {
         [SerializeField] private float _radius = 2f;
         [SerializeField] private LayerMask _enemyLayer;

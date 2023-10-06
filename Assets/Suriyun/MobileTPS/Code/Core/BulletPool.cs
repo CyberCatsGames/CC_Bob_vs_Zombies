@@ -2,7 +2,7 @@
 
 namespace Suriyun.MobileTPS
 {
-    public class BulletPool : Pool<MYBullet>
+    public class BulletPool : Pool<Bullet>
     {
         private float _speed;
         private float _damage;
@@ -22,7 +22,7 @@ namespace Suriyun.MobileTPS
             _damage = damage;
         }
 
-        protected override MYBullet CreateElement(bool isActiveByDefault = false)
+        protected override Bullet CreateElement(bool isActiveByDefault = false)
         {
             var result = base.CreateElement(isActiveByDefault);
             result.SetSpeed(_speed);

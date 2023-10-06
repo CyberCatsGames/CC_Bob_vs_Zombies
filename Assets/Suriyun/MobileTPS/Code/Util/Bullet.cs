@@ -1,84 +1,66 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
-namespace Suriyun.MobileTPS
-{
+namespace Suriyun.MobileTPS {
+    [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(PoolObject))]
-    public class Bullet : MonoBehaviour
-    {
-        [SerializeField] private ParticleSystem _hitEffect;
-        public float damage = 6.66f;
-        [Range(0.0f, 100.0f)] public float accuraycy = 99f;
+    public class Bullet : MonoBehaviour {
+        [SerializeField] protected ParticleSystem HitEffect;
+        [SerializeField] private float _lifeTime = 1.5f;
 
-        public float speed = 128;
-        public float lifetime = 3f;
-
-        private Rigidbody rig;
         private PoolObject _poolObject;
-        private float dev = 0.016f;
+        private Coroutine _dieCoroutine;
 
-        // private void Awake()
-        // {
-        //     _poolObject = GetComponent<PoolObject>();
-        // }
-        //
-        // private void Start()
-        // {
-        //     // Calculate accuracy //
-        //     Vector3 rand = Vector3.zero;
-        //     float offset = 100f - accuraycy;
-        //     rand += transform.right * Random.Range(-offset, offset);
-        //     rand += transform.up * Random.Range(-offset, offset);
-        //     rand = rand.normalized * dev;
-        //
-        //     // Fire bullet //
-        //     rig = GetComponent<Rigidbody>();
-        //     rig.AddForce((transform.forward + rand) * speed, ForceMode.VelocityChange);
-        //
-        //     // Set Bullet lifetime //
-        //     // StartCoroutine(Expire(lifetime));
-        //     Invoke(nameof(Expire), lifetime);
-        //
-        //     // Set pointlight duration a bullet is fired //
-        //     StartCoroutine(ExpireLight());
-        //
-        //     print("Create");
-        // }
-        //
-        // private void Expire()
-        // {
-        //     _poolObject.ReturnToPool();
-        // }
-        //
-        // private IEnumerator ExpireLight()
-        // {
-        //     yield return 0; //new WaitForSeconds (0.08f);
-        //     // Destroy(GetComponent<Light>());
-        //     _poolObject.ReturnToPool();
-        // }
-        //
-        // private void OnCollisionEnter(Collision col)
-        // {
-        //     _poolObject.ReturnToPool();
-        //     print(col.gameObject.name);
-        //     rig.useGravity = true;
-        //     if (col.gameObject.tag == "Enemy")
-        //     {
-        //         _hitEffect.transform.position = col.contacts[0].point;
-        //         _hitEffect.Play();
-        //         // Instantiate(fx_on_hit, col.contacts[0].point, fx_on_hit.transform.rotation);
-        //         var enemy = col.gameObject.GetComponent<Enemy>();
-        //         enemy.hp -= damage;
-        //         _poolObject.ReturnToPool();
-        //     }
-        // }
-        //
-        // private void Die()
-        // {
-        //     
-        // }
-        // private void OnDestroy()
-        // {
-        //     print("I destroyed");
-        // }
+        protected Rigidbody Rigidbody;
+
+        protected float LifeTime => _lifeTime;
+
+        protected float Speed { get; private set; } = 120f;
+
+        protected float Damage { get; private set; } = 6f;
+
+        private void Awake() {
+            Rigidbody = GetComponent<Rigidbody>();
+            _poolObject = GetComponent<PoolObject>();
+        }
+
+        private void OnEnable() {
+            StartCoroutine(Setup());
+        }
+
+        protected virtual void OnCollisionEnter(Collision collision) {
+            if (collision.gameObject.TryGetComponent(out Enemy enemy)) {
+                enemy.ApplyDamage(Damage);
+                var newEffect = Instantiate(HitEffect, collision.contacts[0].point, Quaternion.identity);
+                CancelInvoke(nameof(Die));
+            }
+
+            Die();
+        }
+
+        protected virtual void Die() {
+            Rigidbody.velocity = Vector3.zero;
+            Rigidbody.angularVelocity = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            _poolObject.ReturnToPool();
+        }
+
+        protected virtual IEnumerator Setup() {
+            yield return null;
+            yield return null;
+            Rigidbody.useGravity = true;
+            Rigidbody.angularVelocity = Vector3.zero;
+            Rigidbody.velocity = Vector3.zero;
+            Rigidbody.AddForce(transform.forward * Speed, ForceMode.VelocityChange);
+            Invoke(nameof(Die), _lifeTime);
+        }
+
+        public void SetSpeed(float value) {
+            Speed = value;
+        }
+
+        public void SetDamage(float damage) {
+            Damage = damage;
+        }
     }
 }
